@@ -1,34 +1,18 @@
-'use client'
-
 import Image from 'next/image'
 import type { Painting as PaintingType } from '@/data/site'
-import type { LightboxImage } from './Lightbox'
 
-export function Painting({
-  painting,
-  onImageClick,
-}: {
-  painting: PaintingType
-  onImageClick: (image: LightboxImage) => void
-}) {
+export function Painting({ painting }: { painting: PaintingType }) {
   return (
     <figure className="flex flex-col items-center">
-      <button
-        type="button"
-        onClick={() => onImageClick(painting.image)}
-        aria-label={`View larger: ${painting.title}`}
-        className="block w-full cursor-zoom-in transition-opacity duration-200 hover:opacity-90"
-      >
-        <Image
-          src={painting.image.src || '/placeholder.svg'}
-          alt={painting.image.alt}
-          width={1200}
-          height={1500}
-          loading="lazy"
-          sizes="(max-width: 768px) 100vw, 900px"
-          className="h-auto w-full"
-        />
-      </button>
+      <Image
+        src={painting.image.src || '/placeholder.svg'}
+        alt={painting.image.alt}
+        width={1200}
+        height={1500}
+        loading="lazy"
+        sizes="(max-width: 768px) 100vw, 880px"
+        className="h-auto w-full"
+      />
 
       <figcaption className="mt-6 flex flex-col items-center gap-0.5 text-center leading-[1.25]">
         <span className="font-serif text-sm italic text-foreground">{painting.title}</span>
