@@ -30,7 +30,7 @@ export function Painting({
         />
       </button>
 
-      <figcaption className="mt-6 flex flex-col items-center gap-1 text-center text-sm text-secondary-ink">
+      <figcaption className="mt-6 flex flex-col items-center gap-0.5 text-center text-sm leading-[1.25] text-secondary-ink">
         <span className="italic">{painting.title}</span>
         <span>{painting.medium}</span>
         <span>{painting.size}</span>

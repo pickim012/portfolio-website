@@ -13,14 +13,14 @@ export function Exhibition({
 }) {
   return (
     <article className="flex flex-col items-center">
-      <header className="mb-12 flex flex-col items-center gap-2 text-center">
-        <h2 className="font-display text-2xl leading-snug text-foreground text-balance">
+      <header className="mb-12 flex flex-col items-center gap-1 text-center leading-[1.25]">
+        <h2 className="font-display text-2xl leading-[1.25] text-foreground text-balance">
           {exhibition.title}
         </h2>
-        <p className="text-base text-secondary-ink">({exhibition.type})</p>
-        <p className="mt-4 text-base text-secondary-ink">{exhibition.date}</p>
-        <p className="text-base text-secondary-ink">{exhibition.gallery}</p>
-        <p className="text-base text-secondary-ink">{exhibition.address}</p>
+        <p className="text-base leading-[1.25] text-secondary-ink">({exhibition.type})</p>
+        <p className="mt-4 text-base leading-[1.25] text-secondary-ink">{exhibition.date}</p>
+        <p className="text-base leading-[1.25] text-secondary-ink">{exhibition.gallery}</p>
+        <p className="text-base leading-[1.25] text-secondary-ink">{exhibition.address}</p>
       </header>
 
       <div className="flex w-full flex-col gap-10">

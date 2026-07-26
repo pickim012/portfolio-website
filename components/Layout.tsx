@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Sidebar } from './Sidebar'
+import { SidebarMenu, MobileMenu } from './Sidebar'
 import { Navigator } from './Navigator'
 import { Exhibition } from './Exhibition'
 import { Painting } from './Painting'
@@ -21,7 +21,7 @@ function Home() {
     <section className="flex min-h-[60vh] flex-col justify-center py-20">
       <div className="flex max-w-xl flex-col gap-6">
         {artist.intro.map((line) => (
-          <p key={line} className="text-lg leading-relaxed text-foreground text-pretty">
+          <p key={line} className="text-lg leading-[1.35] text-foreground text-pretty">
             {line}
           </p>
         ))}
@@ -77,13 +77,13 @@ function Paintings({
 
 function CV() {
   return (
-    <section className="flex flex-col gap-10 py-4">
+    <section className="flex flex-col gap-8 py-4">
       {cv.map((entry) => (
         <div key={entry.year} className="flex flex-col gap-2">
-          <h2 className="font-display text-xl text-foreground">{entry.year}</h2>
+          <h2 className="font-display text-xl leading-[1.3] text-foreground">{entry.year}</h2>
           <ul className="flex flex-col gap-1">
             {entry.items.map((item) => (
-              <li key={item} className="text-base text-secondary-ink">
+              <li key={item} className="text-base leading-[1.3] text-secondary-ink">
                 {item}
               </li>
             ))}
@@ -146,11 +146,24 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar route={route} onNavigate={handleNavigate} />
-      <Navigator route={route} />
+      {/* Mobile-only chrome */}
+      <MobileMenu route={route} onNavigate={handleNavigate} />
+      <Navigator
+        route={route}
+        className="pointer-events-none fixed right-5 top-7 z-30 md:hidden"
+      />
 
-      <main className="px-5 pb-32 pt-24 md:pl-[calc(220px+120px+40px)] md:pr-10 md:pt-[60px]">
-        <div className="mx-auto w-full max-w-[900px]">
+      {/* True three-column grid: | Sidebar | Content | Navigator | */}
+      <div className="mx-auto grid max-w-[1440px] grid-cols-1 px-5 pb-32 pt-24 md:grid-cols-[200px_minmax(0,800px)_200px] md:justify-center md:gap-x-16 md:px-10 md:pt-[60px] lg:gap-x-24">
+        {/* Column 1 — Sidebar */}
+        <aside className="hidden md:block">
+          <div className="sticky top-[60px]">
+            <SidebarMenu route={route} onNavigate={handleNavigate} />
+          </div>
+        </aside>
+
+        {/* Column 2 — Content */}
+        <main className="w-full">
           <AnimatePresence mode="wait">
             <motion.div
               key={routeKey(route)}
@@ -162,8 +175,15 @@ export function Layout() {
               <Content route={route} onImageClick={setLightbox} />
             </motion.div>
           </AnimatePresence>
+        </main>
+
+        {/* Column 3 — Navigator (reserved, never overlaps content) */}
+        <div className="hidden md:block">
+          <div className="sticky top-[60px]">
+            <Navigator route={route} />
+          </div>
         </div>
-      </main>
+      </div>
 
       <Lightbox image={lightbox} onClose={() => setLightbox(null)} />
     </div>

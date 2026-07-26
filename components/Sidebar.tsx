@@ -28,10 +28,8 @@ function MenuItem({
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
       style={{ paddingLeft: `${indent * 16}px` }}
-      className={`block w-full text-left text-base leading-relaxed transition-colors duration-200 ${
-        active
-          ? 'text-foreground'
-          : 'text-secondary-ink hover:text-hover-ink'
+      className={`block w-full text-left text-base leading-[1.25] transition-colors duration-200 ${
+        active ? 'text-foreground' : 'text-secondary-ink hover:text-hover-ink'
       }`}
     >
       {label}
@@ -46,7 +44,7 @@ const reveal = {
   transition: { duration: 0.2 },
 }
 
-function Menu_({ route, onNavigate }: SidebarProps) {
+export function SidebarMenu({ route, onNavigate }: SidebarProps) {
   const [worksOpen, setWorksOpen] = useState(
     route.view === 'exhibitions' || route.view === 'paintings',
   )
@@ -70,7 +68,7 @@ function Menu_({ route, onNavigate }: SidebarProps) {
       <button
         type="button"
         onClick={() => onNavigate({ view: 'home' })}
-        className="text-left font-display text-2xl leading-tight text-foreground transition-colors duration-200"
+        className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200"
       >
         {artist.name.first}
         <br />
@@ -78,7 +76,7 @@ function Menu_({ route, onNavigate }: SidebarProps) {
       </button>
 
       {/* Menu tree */}
-      <div className="flex flex-col gap-6 text-base">
+      <div className="flex flex-col gap-5 text-base">
         {/* Works */}
         <div className="flex flex-col gap-2">
           <MenuItem label="Works" onClick={() => setWorksOpen((v) => !v)} />
@@ -143,7 +141,7 @@ function Menu_({ route, onNavigate }: SidebarProps) {
   )
 }
 
-export function Sidebar({ route, onNavigate }: SidebarProps) {
+export function MobileMenu({ route, onNavigate }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   // Close the mobile drawer whenever navigation completes.
@@ -153,18 +151,13 @@ export function Sidebar({ route, onNavigate }: SidebarProps) {
   }
 
   return (
-    <>
-      {/* Desktop fixed sidebar */}
-      <aside className="fixed left-10 top-[60px] z-30 hidden w-[220px] md:block">
-        <Menu_ route={route} onNavigate={onNavigate} />
-      </aside>
-
+    <div className="md:hidden">
       {/* Mobile hamburger */}
       <button
         type="button"
         aria-label="Open menu"
         onClick={() => setMobileOpen(true)}
-        className="fixed left-5 top-6 z-40 text-foreground md:hidden"
+        className="fixed left-5 top-6 z-40 text-foreground"
       >
         <Menu className="h-6 w-6" strokeWidth={1} />
       </button>
@@ -176,7 +169,7 @@ export function Sidebar({ route, onNavigate }: SidebarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-background px-6 py-6 md:hidden"
+            className="fixed inset-0 z-40 bg-background px-6 py-6"
           >
             <button
               type="button"
@@ -187,11 +180,11 @@ export function Sidebar({ route, onNavigate }: SidebarProps) {
               <X className="h-6 w-6" strokeWidth={1} />
             </button>
             <div className="mt-12">
-              <Menu_ route={route} onNavigate={handleNavigate} />
+              <SidebarMenu route={route} onNavigate={handleNavigate} />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   )
 }
