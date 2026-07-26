@@ -51,9 +51,9 @@ export const exhibitions: Exhibition[] = [
 export type Painting = {
   id: string
   title: string
-  medium: string
-  size: string
-  date: string
+  // Single display string, e.g. "Oil on linen, 53 × 45 cm, 2026".
+  // Rendered exactly as written — never parsed or reformatted.
+  details: string
   image: { src: string; alt: string }
 }
 
@@ -62,17 +62,13 @@ export const paintingsByYear: Record<string, Painting[]> = {
     {
       id: 'p-2026-1',
       title: 'Sage Interval',
-      medium: 'Oil on canvas',
-      size: '162 × 130 cm',
-      date: '2026',
+      details: 'Oil on canvas, 162 × 130 cm, 2026',
       image: { src: '/paintings/2026-01.png', alt: 'Sage green and off-white abstract color field painting' },
     },
     {
       id: 'p-2026-2',
       title: 'Low Horizon',
-      medium: 'Oil on linen',
-      size: '112 × 145 cm',
-      date: '2026',
+      details: 'Oil on linen, 112 × 145 cm, 2026',
       image: { src: '/paintings/2026-02.png', alt: 'Ochre and pale grey horizontal band abstract painting' },
     },
   ],
@@ -80,17 +76,13 @@ export const paintingsByYear: Record<string, Painting[]> = {
     {
       id: 'p-2025-1',
       title: 'Terracotta Hours',
-      medium: 'Oil on canvas',
-      size: '150 × 120 cm',
-      date: '2025',
+      details: 'Oil on canvas, 150 × 120 cm, 2025',
       image: { src: '/paintings/2025-01.png', alt: 'Terracotta and cream soft abstract painting' },
     },
     {
       id: 'p-2025-2',
       title: 'Still Air',
-      medium: 'Acrylic on canvas',
-      size: '120 × 120 cm',
-      date: '2025',
+      details: 'Acrylic on canvas, 120 × 120 cm, 2025',
       image: { src: '/paintings/2025-02.png', alt: 'Pale blue-grey and white minimal color field painting' },
     },
   ],
@@ -98,17 +90,13 @@ export const paintingsByYear: Record<string, Painting[]> = {
     {
       id: 'p-2024-1',
       title: 'Sand Passage',
-      medium: 'Oil on canvas',
-      size: '160 × 128 cm',
-      date: '2024',
+      details: 'Oil on canvas, 160 × 128 cm, 2024',
       image: { src: '/paintings/2024-01.png', alt: 'Warm sand and charcoal grey vertical abstract painting' },
     },
     {
       id: 'p-2024-2',
       title: 'Olive Line',
-      medium: 'Oil on linen',
-      size: '110 × 150 cm',
-      date: '2024',
+      details: 'Oil on linen, 110 × 150 cm, 2024',
       image: { src: '/paintings/2024-02.png', alt: 'Muted olive and bone white abstract landscape painting' },
     },
   ],
@@ -116,17 +104,13 @@ export const paintingsByYear: Record<string, Painting[]> = {
     {
       id: 'p-2023-1',
       title: 'Rose Ground',
-      medium: 'Oil on canvas',
-      size: '145 × 115 cm',
-      date: '2023',
+      details: 'Oil on canvas, 145 × 115 cm, 2023',
       image: { src: '/paintings/2023-01.png', alt: 'Rose beige and pale grey layered abstract painting' },
     },
     {
       id: 'p-2023-2',
       title: 'Slate Study',
-      medium: 'Acrylic on canvas',
-      size: '120 × 120 cm',
-      date: '2023',
+      details: 'Acrylic on canvas, 120 × 120 cm, 2023',
       image: { src: '/paintings/2023-02.png', alt: 'Slate grey and cream minimal color field painting' },
     },
   ],
