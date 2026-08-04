@@ -46,33 +46,30 @@ const reveal = {
   transition: { duration: 0.2 },
 }
 
-// Which top-level and Works submenus are expanded, derived from the route.
-type TopOpen = 'works' | 'about' | null
-type WorksOpen = 'exhibitions' | 'paintings' | null
-
-function topFromRoute(route: Route): TopOpen {
-  if (route.view === 'exhibitions' || route.view === 'paintings') return 'works'
-  if (route.view === 'cv' || route.view === 'contacts') return 'about'
-  return null
-}
-
-function worksFromRoute(route: Route): WorksOpen {
-  if (route.view === 'exhibitions') return 'exhibitions'
-  if (route.view === 'paintings') return 'paintings'
-  return null
-}
-
 export function SidebarMenu({ route, onNavigate }: SidebarProps) {
-  // Accordion state: only one branch open at a time on each level.
-  const [topOpen, setTopOpen] = useState<TopOpen>(topFromRoute(route))
-  const [worksOpen, setWorksOpen] = useState<WorksOpen>(worksFromRoute(route))
+  // Independent toggle state: each submenu opens/closes on its own,
+  // and opening one never collapses the others.
+  const [worksExpanded, setWorksExpanded] = useState(
+    route.view === 'exhibitions' || route.view === 'paintings',
+  )
+  const [aboutExpanded, setAboutExpanded] = useState(
+    route.view === 'cv' || route.view === 'contacts',
+  )
+  const [exhibitionsExpanded, setExhibitionsExpanded] = useState(route.view === 'exhibitions')
+  const [paintingsExpanded, setPaintingsExpanded] = useState(route.view === 'paintings')
 
-  // Keep the relevant branches open when the route changes elsewhere.
+  // When the route changes elsewhere, ensure the relevant branch is open,
+  // without collapsing any other submenu the user has already expanded.
   useEffect(() => {
-    const nextTop = topFromRoute(route)
-    const nextWorks = worksFromRoute(route)
-    if (nextTop) setTopOpen(nextTop)
-    if (nextWorks) setWorksOpen(nextWorks)
+    if (route.view === 'exhibitions') {
+      setWorksExpanded(true)
+      setExhibitionsExpanded(true)
+    } else if (route.view === 'paintings') {
+      setWorksExpanded(true)
+      setPaintingsExpanded(true)
+    } else if (route.view === 'cv' || route.view === 'contacts') {
+      setAboutExpanded(true)
+    }
   }, [route])
 
   return (
@@ -94,21 +91,19 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
         <div className="flex flex-col gap-2">
           <MenuItem
             label="Works"
-            onClick={() => setTopOpen((v) => (v === 'works' ? null : 'works'))}
+            onClick={() => setWorksExpanded((v) => !v)}
           />
           <AnimatePresence initial={false}>
-            {topOpen === 'works' && (
+            {worksExpanded && (
               <motion.div {...reveal} className="flex flex-col gap-2 overflow-hidden">
                 {/* Exhibitions → Solo / Group */}
                 <MenuItem
                   label="Exhibitions"
                   indent={1}
-                  onClick={() =>
-                    setWorksOpen((v) => (v === 'exhibitions' ? null : 'exhibitions'))
-                  }
+                  onClick={() => setExhibitionsExpanded((v) => !v)}
                 />
                 <AnimatePresence initial={false}>
-                  {worksOpen === 'exhibitions' && (
+                  {exhibitionsExpanded && (
                     <motion.div {...reveal} className="flex flex-col gap-1.5 overflow-hidden">
                       <MenuItem
                         label="Solo"
@@ -132,12 +127,10 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
                 <MenuItem
                   label="Paintings"
                   indent={1}
-                  onClick={() =>
-                    setWorksOpen((v) => (v === 'paintings' ? null : 'paintings'))
-                  }
+                  onClick={() => setPaintingsExpanded((v) => !v)}
                 />
                 <AnimatePresence initial={false}>
-                  {worksOpen === 'paintings' && (
+                  {paintingsExpanded && (
                     <motion.div {...reveal} className="flex flex-col gap-1.5 overflow-hidden">
                       {paintingYears.map((year) => (
                         <MenuItem
@@ -161,10 +154,10 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
         <div className="flex flex-col gap-2">
           <MenuItem
             label="About"
-            onClick={() => setTopOpen((v) => (v === 'about' ? null : 'about'))}
+            onClick={() => setAboutExpanded((v) => !v)}
           />
           <AnimatePresence initial={false}>
-            {topOpen === 'about' && (
+            {aboutExpanded && (
               <motion.div {...reveal} className="flex flex-col gap-2 overflow-hidden">
                 <MenuItem
                   label="CV"
