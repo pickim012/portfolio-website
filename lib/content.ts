@@ -74,6 +74,7 @@ export async function getSiteContent(): Promise<SiteContent> {
       gallery: e.gallery,
       address: e.address,
       images: toStringArray(e.images),
+      about: e.about ?? '',
     }))
 
   const paintingsByYear: Record<string, PublicPainting[]> = {}
@@ -132,6 +133,7 @@ export async function getExhibitionsForAdmin(): Promise<AdminExhibition[]> {
     gallery: e.gallery,
     address: e.address,
     images: toStringArray(e.images),
+    about: e.about ?? '',
     published: e.published,
     sortOrder: e.sortOrder,
   }))

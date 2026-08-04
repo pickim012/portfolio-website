@@ -81,6 +81,7 @@ export type PublicExhibition = {
   gallery: string
   address: string
   images: string[]
+  about: string
 }
 
 export type PublicPainting = {
@@ -118,6 +119,7 @@ export type AdminExhibition = {
   gallery: string
   address: string
   images: string[]
+  about: string
   published: boolean
   sortOrder: number
 }
@@ -129,6 +131,7 @@ export type ExhibitionInput = {
   gallery: string
   address: string
   images: string[]
+  about: string
   published: boolean
 }
 

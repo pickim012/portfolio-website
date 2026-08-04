@@ -27,6 +27,12 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
           />
         ))}
       </div>
+
+      {exhibition.about.trim() !== '' && (
+        <p className="mt-12 w-full whitespace-pre-line text-base leading-relaxed text-secondary-ink">
+          {exhibition.about}
+        </p>
+      )}
     </article>
   )
 }

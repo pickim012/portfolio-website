@@ -8,7 +8,7 @@ import {
   updateExhibition,
 } from "@/app/admin/(dashboard)/actions"
 import type { AdminExhibition } from "@/lib/content-types"
-import { Btn, Field, Segmented, TextInput, Toggle } from "./ui"
+import { Btn, Field, Segmented, TextArea, TextInput, Toggle } from "./ui"
 import { ImageUrlList, makeImageItems, type ImageItem } from "./ImageUrlList"
 
 export function ExhibitionForm({
@@ -28,6 +28,7 @@ export function ExhibitionForm({
   const [gallery, setGallery] = useState(item?.gallery ?? "")
   const [address, setAddress] = useState(item?.address ?? "")
   const [images, setImages] = useState<ImageItem[]>(makeImageItems(item?.images ?? []))
+  const [about, setAbout] = useState(item?.about ?? "")
   const [published, setPublished] = useState(item?.published ?? true)
   const [pending, startTransition] = useTransition()
 
@@ -39,6 +40,8 @@ export function ExhibitionForm({
       gallery: gallery.trim(),
       address: address.trim(),
       images: images.map((i) => i.url.trim()).filter(Boolean),
+      // Preserve line breaks and spacing exactly as typed (no trim).
+      about,
       published,
     }
   }
@@ -113,6 +116,15 @@ export function ExhibitionForm({
         <span className="text-sm font-medium text-neutral-800">Image Links</span>
         <ImageUrlList items={images} onItemsChange={setImages} />
       </div>
+
+      <Field label="About" hint="Optional. Shown below the images. Line breaks are preserved.">
+        <TextArea
+          value={about}
+          onChange={(e) => setAbout(e.target.value)}
+          placeholder="A short description of the exhibition…"
+          rows={5}
+        />
+      </Field>
 
       <Field label="Status">
         <div>

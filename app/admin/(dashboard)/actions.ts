@@ -56,6 +56,7 @@ export async function createExhibition(input: ExhibitionInput) {
     gallery: input.gallery,
     address: input.address,
     images: input.images,
+    about: input.about,
     published: input.published,
     sortOrder: Number(min) - 1,
   })
@@ -74,6 +75,7 @@ export async function updateExhibition(id: number, input: ExhibitionInput) {
       gallery: input.gallery,
       address: input.address,
       images: input.images,
+      about: input.about,
       published: input.published,
     })
     .where(eq(exhibitions.id, id))
