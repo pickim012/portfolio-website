@@ -3,12 +3,13 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { artist, paintingYears } from '@/data/site'
+import { ARTIST_NAME } from '@/lib/site-config'
 import type { Route } from '@/lib/navigation'
 
 type SidebarProps = {
   route: Route
   onNavigate: (route: Route) => void
+  paintingYears: string[]
 }
 
 // Shared easing/duration used by both the height collapse and the sibling
@@ -78,7 +79,7 @@ function Collapse({
   )
 }
 
-export function SidebarMenu({ route, onNavigate }: SidebarProps) {
+export function SidebarMenu({ route, onNavigate, paintingYears }: SidebarProps) {
   // Independent toggle state: each submenu opens/closes on its own,
   // and opening one never collapses the others.
   const [worksExpanded, setWorksExpanded] = useState(
@@ -112,9 +113,9 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
         onClick={() => onNavigate({ view: 'home' })}
         className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200"
       >
-        {artist.name.first}
+        {ARTIST_NAME.first}
         <br />
-        {artist.name.last}
+        {ARTIST_NAME.last}
       </button>
 
       {/* Menu tree. Each collapsible region is the LAST child of a no-gap
@@ -203,7 +204,7 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
   )
 }
 
-export function MobileMenu({ route, onNavigate }: SidebarProps) {
+export function MobileMenu({ route, onNavigate, paintingYears }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   // Close the mobile drawer whenever navigation completes.
@@ -242,7 +243,11 @@ export function MobileMenu({ route, onNavigate }: SidebarProps) {
               <X className="h-6 w-6" strokeWidth={1} />
             </button>
             <div className="mt-12">
-              <SidebarMenu route={route} onNavigate={handleNavigate} />
+              <SidebarMenu
+                route={route}
+                onNavigate={handleNavigate}
+                paintingYears={paintingYears}
+              />
             </div>
           </motion.div>
         )}

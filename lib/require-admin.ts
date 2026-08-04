@@ -15,3 +15,15 @@ export async function requireAdmin(): Promise<void> {
     redirect("/admin/login")
   }
 }
+
+/**
+ * Guard for server actions (mutations). Throws instead of redirecting so a
+ * mutation can never run for an unauthenticated caller. Call at the top of
+ * every content-mutating server action.
+ */
+export async function assertAdmin(): Promise<void> {
+  const token = (await cookies()).get(SESSION_COOKIE)?.value
+  if (!(await verifySessionToken(token))) {
+    throw new Error("Unauthorized")
+  }
+}

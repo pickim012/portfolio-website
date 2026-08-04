@@ -7,30 +7,30 @@ import { SidebarMenu, MobileMenu } from './Sidebar'
 import { Navigator } from './Navigator'
 import { Exhibition } from './Exhibition'
 import { Painting } from './Painting'
-import {
-  artist,
-  contacts,
-  cv,
-  exhibitions,
-  paintingsByYear,
-} from '@/data/site'
+import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
-function Home() {
+function Home({ home }: { home: SiteContent['home'] }) {
+  const paragraphs = home.body.split(/\n{2,}/).filter((p) => p.trim() !== '')
   return (
     <section className="flex flex-col gap-8 py-4">
-      <Image
-        src={artist.homeImage.src || '/placeholder.svg'}
-        alt={artist.homeImage.alt}
-        width={1200}
-        height={800}
-        priority
-        sizes="(max-width: 768px) 100vw, 800px"
-        className="h-auto w-full"
-      />
+      {home.imageSrc ? (
+        <Image
+          src={home.imageSrc || '/placeholder.svg'}
+          alt="Featured painting"
+          width={1200}
+          height={800}
+          priority
+          sizes="(max-width: 768px) 100vw, 800px"
+          className="h-auto w-full"
+        />
+      ) : null}
       <div className="flex flex-col gap-4">
-        {artist.intro.map((line) => (
-          <p key={line} className="text-lg leading-[1.35] text-foreground text-pretty">
+        {paragraphs.map((line, i) => (
+          <p
+            key={i}
+            className="whitespace-pre-line text-lg leading-[1.35] text-foreground text-pretty"
+          >
             {line}
           </p>
         ))}
@@ -39,8 +39,14 @@ function Home() {
   )
 }
 
-function Exhibitions({ kind }: { kind: ExhibitionKind }) {
-  const shown = exhibitions.filter((exhibition) => exhibition.kind === kind)
+function Exhibitions({
+  kind,
+  items,
+}: {
+  kind: ExhibitionKind
+  items: SiteContent['exhibitions']
+}) {
+  const shown = items.filter((exhibition) => exhibition.kind === kind)
   return (
     <section className="flex flex-col gap-20 py-4">
       {shown.length === 0 ? (
@@ -56,7 +62,13 @@ function Exhibitions({ kind }: { kind: ExhibitionKind }) {
   )
 }
 
-function Paintings({ year }: { year: string }) {
+function Paintings({
+  year,
+  paintingsByYear,
+}: {
+  year: string
+  paintingsByYear: SiteContent['paintingsByYear']
+}) {
   const works = paintingsByYear[year] ?? []
   return (
     <section className="flex flex-col gap-20 py-4">
@@ -71,62 +83,64 @@ function Paintings({ year }: { year: string }) {
   )
 }
 
-function CV() {
+function CV({ cv }: { cv: SiteContent['cv'] }) {
   return (
     <section className="flex flex-col gap-8 py-4">
       <h1 className="font-display text-xl leading-[1.3] text-foreground">CV</h1>
       {cv.map((section) => (
-        <div key={section.heading} className="flex flex-col gap-2">
-          <h2 className="text-base leading-[1.3] text-foreground">{section.heading}</h2>
-          <ul className="flex flex-col gap-1">
-            {section.entries.map((entry) => (
-              <li key={entry} className="text-base leading-[1.3] text-foreground/75">
-                {entry}
-              </li>
-            ))}
-          </ul>
+        <div key={section.id} className="flex flex-col gap-2">
+          <h2 className="text-base leading-[1.3] text-foreground">{section.label}</h2>
+          <p className="whitespace-pre-line text-base leading-[1.6] text-foreground/75">
+            {section.content}
+          </p>
         </div>
       ))}
     </section>
   )
 }
 
-function Contacts() {
+function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
   return (
     <section className="flex flex-col gap-6 py-4">
       {contacts.map((contact) => (
-        <div key={contact.label} className="flex flex-col gap-1">
+        <div key={contact.id} className="flex flex-col gap-1">
           <span className="text-sm text-secondary-ink">{contact.label}</span>
-          <a
-            href={contact.href}
-            target={contact.href.startsWith('http') ? '_blank' : undefined}
-            rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className="text-base text-foreground transition-colors duration-200 hover:text-hover-ink"
-          >
-            {contact.value}
-          </a>
+          {contact.href ? (
+            <a
+              href={contact.href}
+              target={contact.href.startsWith('http') ? '_blank' : undefined}
+              rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="text-base text-foreground transition-colors duration-200 hover:text-hover-ink"
+            >
+              {contact.value}
+            </a>
+          ) : (
+            <p className="whitespace-pre-line text-base leading-[1.6] text-foreground">
+              {contact.value}
+            </p>
+          )}
         </div>
       ))}
     </section>
   )
 }
 
-function Content({ route }: { route: Route }) {
+function Content({ route, content }: { route: Route; content: SiteContent }) {
   switch (route.view) {
     case 'home':
-      return <Home />
+      return <Home home={content.home} />
     case 'exhibitions':
-      return <Exhibitions kind={route.kind} />
+      return <Exhibitions kind={route.kind} items={content.exhibitions} />
     case 'paintings':
-      return <Paintings year={route.year} />
+      return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} />
     case 'cv':
-      return <CV />
+      return <CV cv={content.cv} />
     case 'contacts':
-      return <Contacts />
+      return <Contacts contacts={content.contacts} />
   }
 }
 
-export function Layout() {
+export function Layout({ content }: { content: SiteContent }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
 
   const handleNavigate = (next: Route) => {
@@ -137,7 +151,11 @@ export function Layout() {
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile-only chrome */}
-      <MobileMenu route={route} onNavigate={handleNavigate} />
+      <MobileMenu
+        route={route}
+        onNavigate={handleNavigate}
+        paintingYears={content.paintingYears}
+      />
       <Navigator
         route={route}
         className="pointer-events-none fixed right-5 top-7 z-30 md:hidden"
@@ -148,7 +166,11 @@ export function Layout() {
         {/* Column 1 — Sidebar */}
         <aside className="hidden md:block">
           <div className="sticky top-[60px]">
-            <SidebarMenu route={route} onNavigate={handleNavigate} />
+            <SidebarMenu
+              route={route}
+              onNavigate={handleNavigate}
+              paintingYears={content.paintingYears}
+            />
           </div>
         </aside>
 
@@ -162,7 +184,7 @@ export function Layout() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Content route={route} />
+              <Content route={route} content={content} />
             </motion.div>
           </AnimatePresence>
         </main>

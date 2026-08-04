@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import type { Exhibition as ExhibitionType } from '@/data/site'
+import type { PublicExhibition } from '@/lib/content'
 
-export function Exhibition({ exhibition }: { exhibition: ExhibitionType }) {
+export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
   return (
     <article className="flex flex-col items-center">
       <header className="mb-12 flex flex-col items-center gap-1 text-center leading-[1.25]">
@@ -14,11 +14,11 @@ export function Exhibition({ exhibition }: { exhibition: ExhibitionType }) {
       </header>
 
       <div className="flex w-full flex-col gap-10">
-        {exhibition.images.map((image) => (
+        {exhibition.images.map((src, i) => (
           <Image
-            key={image.src}
-            src={image.src || '/placeholder.svg'}
-            alt={image.alt}
+            key={`${src}-${i}`}
+            src={src || '/placeholder.svg'}
+            alt={exhibition.title || 'Exhibition'}
             width={1200}
             height={800}
             loading="lazy"
