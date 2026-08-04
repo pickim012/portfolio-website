@@ -11,6 +11,13 @@ type SidebarProps = {
   onNavigate: (route: Route) => void
 }
 
+// Shared easing/duration used by both the height collapse and the sibling
+// position (layout) animation, so a block sliding up to fill freed space
+// settles with the exact same motion as the collapse itself.
+const EASE = [0.4, 0, 0.2, 1] as const
+const DURATION = 0.25
+const layoutTransition = { layout: { duration: DURATION, ease: EASE } }
+
 function MenuItem({
   label,
   active = false,
@@ -61,7 +68,7 @@ function Collapse({
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: DURATION, ease: EASE }}
           className="overflow-hidden"
         >
           <div className={innerClassName}>{children}</div>
@@ -116,11 +123,11 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
           on their static wrappers, which stay mounted and never snap. */}
       <div className="flex flex-col gap-5 text-base">
         {/* Works */}
-        <div className="flex flex-col">
+        <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
           <MenuItem label="Works" onClick={() => setWorksExpanded((v) => !v)} />
           <Collapse open={worksExpanded} innerClassName="flex flex-col gap-2 pt-2">
             {/* Exhibitions → Solo / Group */}
-            <div className="flex flex-col">
+            <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
               <MenuItem
                 label="Exhibitions"
                 indent={1}
@@ -145,10 +152,10 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
                   onClick={() => onNavigate({ view: 'exhibitions', kind: 'group' })}
                 />
               </Collapse>
-            </div>
+            </motion.div>
 
             {/* Paintings → years */}
-            <div className="flex flex-col">
+            <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
               <MenuItem
                 label="Paintings"
                 indent={1}
@@ -169,12 +176,12 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
                   />
                 ))}
               </Collapse>
-            </div>
+            </motion.div>
           </Collapse>
-        </div>
+        </motion.div>
 
         {/* About */}
-        <div className="flex flex-col">
+        <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
           <MenuItem label="About" onClick={() => setAboutExpanded((v) => !v)} />
           <Collapse open={aboutExpanded} innerClassName="flex flex-col gap-2 pt-2">
             <MenuItem
@@ -190,7 +197,7 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
               onClick={() => onNavigate({ view: 'contacts' })}
             />
           </Collapse>
-        </div>
+        </motion.div>
       </div>
     </div>
   )
