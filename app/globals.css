@@ -165,6 +165,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    /* Always reserve space for the scrollbar so navigating between short and
+       tall pages never changes the viewport width. Without this, the centered
+       layout (and the sidebar/navigator with it) jumps horizontally when the
+       scrollbar appears or disappears. */
+    scrollbar-gutter: stable;
+  }
   body {
     @apply bg-background text-foreground;
   }
