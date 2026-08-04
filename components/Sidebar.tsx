@@ -39,11 +39,15 @@ function MenuItem({
   )
 }
 
+// Animate both height and opacity so expand and collapse are mirror images:
+// Framer Motion tweens through the real measured content height in each
+// direction (via AnimatePresence's exit), so siblings below shift smoothly
+// instead of snapping into place.
 const reveal = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.2 },
+  initial: { height: 0, opacity: 0 },
+  animate: { height: 'auto', opacity: 1 },
+  exit: { height: 0, opacity: 0 },
+  transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
 }
 
 export function SidebarMenu({ route, onNavigate }: SidebarProps) {
