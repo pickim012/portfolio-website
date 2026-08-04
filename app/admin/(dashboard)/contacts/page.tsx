@@ -1,16 +1,18 @@
-import { PageHeader, Placeholder } from "@/components/admin/PageHeader"
+import { PageHeader } from "@/components/admin/PageHeader"
+import { ContactsEditor } from "@/components/admin/ContactsEditor"
+import { getContactsForAdmin } from "@/lib/content"
 
-export default function AdminContactsPage() {
+export const dynamic = "force-dynamic"
+
+export default async function AdminContactsPage() {
+  const initial = await getContactsForAdmin()
   return (
     <div>
       <PageHeader
         title="Contacts"
-        description="Edit the contact details shown on your website."
+        description="Edit contact details. Toggle visibility and use custom sections for anything extra."
       />
-      <Placeholder>
-        The contacts editing form will go here. Let me know which fields you want
-        to manage (email, Instagram, etc.) and I&apos;ll build it next.
-      </Placeholder>
+      <ContactsEditor initial={initial} />
     </div>
   )
 }

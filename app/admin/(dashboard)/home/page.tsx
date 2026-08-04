@@ -1,16 +1,18 @@
-import { PageHeader, Placeholder } from "@/components/admin/PageHeader"
+import { PageHeader } from "@/components/admin/PageHeader"
+import { HomeEditor } from "@/components/admin/HomeEditor"
+import { getHomeForAdmin } from "@/lib/content"
 
-export default function AdminHomePage() {
+export const dynamic = "force-dynamic"
+
+export default async function AdminHomePage() {
+  const initial = await getHomeForAdmin()
   return (
     <div>
       <PageHeader
         title="Home"
-        description="Edit the content shown on your website's homepage."
+        description="Edit the image and text shown on your website's homepage."
       />
-      <Placeholder>
-        The homepage editing form will go here. Tell me which fields you want to
-        manage (intro text, featured image, etc.) and I&apos;ll build it next.
-      </Placeholder>
+      <HomeEditor initial={initial} />
     </div>
   )
 }

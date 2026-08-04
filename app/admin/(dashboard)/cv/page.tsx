@@ -1,14 +1,18 @@
-import { PageHeader, Placeholder } from "@/components/admin/PageHeader"
+import { PageHeader } from "@/components/admin/PageHeader"
+import { CvEditor } from "@/components/admin/CvEditor"
+import { getCvForAdmin } from "@/lib/content"
 
-export default function AdminCvPage() {
+export const dynamic = "force-dynamic"
+
+export default async function AdminCvPage() {
+  const initial = await getCvForAdmin()
   return (
     <div>
-      <PageHeader title="CV" description="Edit your CV sections and entries." />
-      <Placeholder>
-        The CV editing form will go here. Let me know how you want to manage the
-        sections (Solo Exhibitions, Group Exhibitions, Education, Awards) and
-        I&apos;ll build it next.
-      </Placeholder>
+      <PageHeader
+        title="CV"
+        description="Edit CV sections. Toggle visibility and use custom sections for anything extra."
+      />
+      <CvEditor initial={initial} />
     </div>
   )
 }

@@ -7,116 +7,24 @@ import {
   homeContent,
   paintings,
 } from '@/lib/db/schema'
+import {
+  type AdminExhibition,
+  type AdminPainting,
+  type ContactField,
+  type CvSection,
+  type PublicContact,
+  type PublicExhibition,
+  type PublicPainting,
+  type SiteContent,
+  defaultContactFields,
+  defaultCvSections,
+} from '@/lib/content-types'
 
 // Static artist identity (the Home admin only edits the image + body text).
 export { ARTIST_NAME } from '@/lib/site-config'
-
-// ---------------------------------------------------------------------------
-// CV / Contacts section templates
-// ---------------------------------------------------------------------------
-export const CV_FIXED = [
-  { id: 'solo', label: 'Solo Exhibitions' },
-  { id: 'group', label: 'Group Exhibitions' },
-  { id: 'education', label: 'Education' },
-  { id: 'award', label: 'Award' },
-] as const
-
-export const CONTACT_FIXED = [
-  { id: 'email', label: 'Email' },
-  { id: 'instagram', label: 'Instagram' },
-] as const
-
-export const CUSTOM_SLOTS = 3
-
-export type CvSection = {
-  id: string
-  kind: 'fixed' | 'custom'
-  label: string // fixed: section name; custom: user-defined title
-  visible: boolean
-  content: string
-}
-
-export type ContactField = {
-  id: string
-  kind: 'fixed' | 'custom'
-  label: string // fixed: 'Email' | 'Instagram'; custom: user-defined title
-  visible: boolean
-  value: string // fixed: the value; custom: free text content
-}
-
-// Default structures used when the singleton row has not been seeded yet.
-export function defaultCvSections(): CvSection[] {
-  const fixed: CvSection[] = CV_FIXED.map((s) => ({
-    id: s.id,
-    kind: 'fixed',
-    label: s.label,
-    visible: true,
-    content: '',
-  }))
-  const custom: CvSection[] = Array.from({ length: CUSTOM_SLOTS }, (_, i) => ({
-    id: `custom-${i + 1}`,
-    kind: 'custom',
-    label: '',
-    visible: false,
-    content: '',
-  }))
-  return [...fixed, ...custom]
-}
-
-export function defaultContactFields(): ContactField[] {
-  const fixed: ContactField[] = CONTACT_FIXED.map((f) => ({
-    id: f.id,
-    kind: 'fixed',
-    label: f.label,
-    visible: true,
-    value: '',
-  }))
-  const custom: ContactField[] = Array.from({ length: CUSTOM_SLOTS }, (_, i) => ({
-    id: `custom-${i + 1}`,
-    kind: 'custom',
-    label: '',
-    visible: false,
-    value: '',
-  }))
-  return [...fixed, ...custom]
-}
-
-// ---------------------------------------------------------------------------
-// Public (front-end) content types
-// ---------------------------------------------------------------------------
-export type PublicExhibition = {
-  id: number
-  kind: 'solo' | 'group'
-  title: string
-  date: string
-  gallery: string
-  address: string
-  images: string[]
-}
-
-export type PublicPainting = {
-  id: number
-  title: string
-  details: string
-  images: string[]
-}
-
-export type PublicContact = {
-  id: string
-  kind: 'email' | 'instagram' | 'custom'
-  label: string
-  value: string
-  href?: string
-}
-
-export type SiteContent = {
-  home: { imageSrc: string; body: string }
-  exhibitions: PublicExhibition[]
-  paintingsByYear: Record<string, PublicPainting[]>
-  paintingYears: string[]
-  cv: { id: string; label: string; content: string }[]
-  contacts: PublicContact[]
-}
+// Re-export shared types/constants so existing importers of '@/lib/content'
+// keep working while '@/lib/content-types' stays the client-safe source.
+export * from '@/lib/content-types'
 
 function toStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return []
@@ -199,4 +107,58 @@ export async function getSiteContent(): Promise<SiteContent> {
     }))
 
   return { home, exhibitions: publishedExhibitions, paintingsByYear, paintingYears, cv, contacts }
+}
+
+// ---------------------------------------------------------------------------
+// Admin reads: return ALL rows (including hidden) to pre-fill the editor.
+// ---------------------------------------------------------------------------
+export async function getHomeForAdmin(): Promise<{ imageUrl: string; body: string }> {
+  const rows = await db.select().from(homeContent).limit(1)
+  return rows[0]
+    ? { imageUrl: rows[0].imageUrl, body: rows[0].body }
+    : { imageUrl: '', body: '' }
+}
+
+export async function getExhibitionsForAdmin(): Promise<AdminExhibition[]> {
+  const rows = await db
+    .select()
+    .from(exhibitions)
+    .orderBy(asc(exhibitions.sortOrder), asc(exhibitions.createdAt))
+  return rows.map((e) => ({
+    id: e.id,
+    kind: e.kind === 'group' ? 'group' : 'solo',
+    title: e.title,
+    date: e.dateText,
+    gallery: e.gallery,
+    address: e.address,
+    images: toStringArray(e.images),
+    published: e.published,
+    sortOrder: e.sortOrder,
+  }))
+}
+
+export async function getPaintingsForAdmin(): Promise<AdminPainting[]> {
+  const rows = await db
+    .select()
+    .from(paintings)
+    .orderBy(desc(paintings.year), asc(paintings.sortOrder), asc(paintings.createdAt))
+  return rows.map((p) => ({
+    id: p.id,
+    year: p.year,
+    date: p.dateText,
+    title: p.title,
+    details: p.details,
+    images: toStringArray(p.images),
+    sortOrder: p.sortOrder,
+  }))
+}
+
+export async function getCvForAdmin(): Promise<CvSection[]> {
+  const rows = await db.select().from(cvContent).limit(1)
+  return (rows[0]?.sections as CvSection[] | undefined) ?? defaultCvSections()
+}
+
+export async function getContactsForAdmin(): Promise<ContactField[]> {
+  const rows = await db.select().from(contactsContent).limit(1)
+  return (rows[0]?.fields as ContactField[] | undefined) ?? defaultContactFields()
 }
