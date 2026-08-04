@@ -1,6 +1,8 @@
+export type ExhibitionKind = 'solo' | 'group'
+
 export type Route =
   | { view: 'home' }
-  | { view: 'exhibitions' }
+  | { view: 'exhibitions'; kind: ExhibitionKind }
   | { view: 'paintings'; year: string }
   | { view: 'cv' }
   | { view: 'contacts' }
@@ -10,6 +12,8 @@ export function routeKey(route: Route): string {
   switch (route.view) {
     case 'paintings':
       return `paintings-${route.year}`
+    case 'exhibitions':
+      return `exhibitions-${route.kind}`
     default:
       return route.view
   }
@@ -21,7 +25,7 @@ export function breadcrumb(route: Route): string[] {
     case 'home':
       return ['Home']
     case 'exhibitions':
-      return ['Works', 'Exhibitions']
+      return ['Works', 'Exhibitions', route.kind === 'solo' ? 'Solo' : 'Group']
     case 'paintings':
       return ['Works', 'Paintings', route.year]
     case 'cv':

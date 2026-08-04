@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
 import { SidebarMenu, MobileMenu } from './Sidebar'
 import { Navigator } from './Navigator'
 import { Exhibition } from './Exhibition'
 import { Painting } from './Painting'
-import { Lightbox, type LightboxImage } from './Lightbox'
 import {
   artist,
   contacts,
@@ -14,12 +14,21 @@ import {
   exhibitions,
   paintingsByYear,
 } from '@/data/site'
-import { routeKey, type Route } from '@/lib/navigation'
+import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
 function Home() {
   return (
-    <section className="flex min-h-[60vh] flex-col justify-center py-20">
-      <div className="flex max-w-xl flex-col gap-6">
+    <section className="flex flex-col gap-8 py-4">
+      <Image
+        src={artist.homeImage.src || '/placeholder.svg'}
+        alt={artist.homeImage.alt}
+        width={1200}
+        height={800}
+        priority
+        sizes="(max-width: 768px) 100vw, 800px"
+        className="h-auto w-full"
+      />
+      <div className="flex flex-col gap-4">
         {artist.intro.map((line) => (
           <p key={line} className="text-lg leading-[1.35] text-foreground text-pretty">
             {line}
@@ -30,31 +39,24 @@ function Home() {
   )
 }
 
-function Exhibitions({
-  onImageClick,
-}: {
-  onImageClick: (image: LightboxImage) => void
-}) {
+function Exhibitions({ kind }: { kind: ExhibitionKind }) {
+  const shown = exhibitions.filter((exhibition) => exhibition.kind === kind)
   return (
     <section className="flex flex-col gap-20 py-4">
-      {exhibitions.map((exhibition) => (
-        <Exhibition
-          key={exhibition.id}
-          exhibition={exhibition}
-          onImageClick={onImageClick}
-        />
-      ))}
+      {shown.length === 0 ? (
+        <p className="text-center text-base text-secondary-ink">
+          No {kind} exhibitions yet.
+        </p>
+      ) : (
+        shown.map((exhibition) => (
+          <Exhibition key={exhibition.id} exhibition={exhibition} />
+        ))
+      )}
     </section>
   )
 }
 
-function Paintings({
-  year,
-  onImageClick,
-}: {
-  year: string
-  onImageClick: (image: LightboxImage) => void
-}) {
+function Paintings({ year }: { year: string }) {
   const works = paintingsByYear[year] ?? []
   return (
     <section className="flex flex-col gap-20 py-4">
@@ -63,13 +65,7 @@ function Paintings({
           No works for {year}.
         </p>
       ) : (
-        works.map((painting) => (
-          <Painting
-            key={painting.id}
-            painting={painting}
-            onImageClick={onImageClick}
-          />
-        ))
+        works.map((painting) => <Painting key={painting.id} painting={painting} />)
       )}
     </section>
   )
@@ -78,13 +74,14 @@ function Paintings({
 function CV() {
   return (
     <section className="flex flex-col gap-8 py-4">
-      {cv.map((entry) => (
-        <div key={entry.year} className="flex flex-col gap-2">
-          <h2 className="font-display text-xl leading-[1.3] text-foreground">{entry.year}</h2>
+      <h1 className="font-display text-xl leading-[1.3] text-foreground">CV</h1>
+      {cv.map((section) => (
+        <div key={section.heading} className="flex flex-col gap-2">
+          <h2 className="text-base leading-[1.3] text-foreground">{section.heading}</h2>
           <ul className="flex flex-col gap-1">
-            {entry.items.map((item) => (
-              <li key={item} className="text-base leading-[1.3] text-secondary-ink">
-                {item}
+            {section.entries.map((entry) => (
+              <li key={entry} className="text-base leading-[1.3] text-foreground/75">
+                {entry}
               </li>
             ))}
           </ul>
@@ -114,20 +111,14 @@ function Contacts() {
   )
 }
 
-function Content({
-  route,
-  onImageClick,
-}: {
-  route: Route
-  onImageClick: (image: LightboxImage) => void
-}) {
+function Content({ route }: { route: Route }) {
   switch (route.view) {
     case 'home':
       return <Home />
     case 'exhibitions':
-      return <Exhibitions onImageClick={onImageClick} />
+      return <Exhibitions kind={route.kind} />
     case 'paintings':
-      return <Paintings year={route.year} onImageClick={onImageClick} />
+      return <Paintings year={route.year} />
     case 'cv':
       return <CV />
     case 'contacts':
@@ -137,7 +128,6 @@ function Content({
 
 export function Layout() {
   const [route, setRoute] = useState<Route>({ view: 'home' })
-  const [lightbox, setLightbox] = useState<LightboxImage | null>(null)
 
   const handleNavigate = (next: Route) => {
     setRoute(next)
@@ -172,7 +162,7 @@ export function Layout() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Content route={route} onImageClick={setLightbox} />
+              <Content route={route} />
             </motion.div>
           </AnimatePresence>
         </main>
@@ -184,8 +174,6 @@ export function Layout() {
           </div>
         </div>
       </div>
-
-      <Lightbox image={lightbox} onClose={() => setLightbox(null)} />
     </div>
   )
 }

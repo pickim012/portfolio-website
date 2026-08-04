@@ -15,11 +15,13 @@ function MenuItem({
   label,
   active = false,
   indent = 0,
+  small = false,
   onClick,
 }: {
   label: string
   active?: boolean
   indent?: number
+  small?: boolean
   onClick: () => void
 }) {
   return (
@@ -28,9 +30,9 @@ function MenuItem({
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
       style={{ paddingLeft: `${indent * 16}px` }}
-      className={`block w-full text-left text-base leading-[1.25] transition-colors duration-200 ${
-        active ? 'text-foreground' : 'text-secondary-ink hover:text-hover-ink'
-      }`}
+      className={`block w-full text-left leading-[1.15] transition-colors duration-200 ${
+        small ? 'text-sm' : 'text-base leading-[1.25]'
+      } ${active ? 'text-foreground' : 'text-secondary-ink hover:text-hover-ink'}`}
     >
       {label}
     </button>
@@ -44,22 +46,33 @@ const reveal = {
   transition: { duration: 0.2 },
 }
 
+// Which top-level and Works submenus are expanded, derived from the route.
+type TopOpen = 'works' | 'about' | null
+type WorksOpen = 'exhibitions' | 'paintings' | null
+
+function topFromRoute(route: Route): TopOpen {
+  if (route.view === 'exhibitions' || route.view === 'paintings') return 'works'
+  if (route.view === 'cv' || route.view === 'contacts') return 'about'
+  return null
+}
+
+function worksFromRoute(route: Route): WorksOpen {
+  if (route.view === 'exhibitions') return 'exhibitions'
+  if (route.view === 'paintings') return 'paintings'
+  return null
+}
+
 export function SidebarMenu({ route, onNavigate }: SidebarProps) {
-  const [worksOpen, setWorksOpen] = useState(
-    route.view === 'exhibitions' || route.view === 'paintings',
-  )
-  const [paintingsOpen, setPaintingsOpen] = useState(route.view === 'paintings')
-  const [aboutOpen, setAboutOpen] = useState(
-    route.view === 'cv' || route.view === 'contacts',
-  )
+  // Accordion state: only one branch open at a time on each level.
+  const [topOpen, setTopOpen] = useState<TopOpen>(topFromRoute(route))
+  const [worksOpen, setWorksOpen] = useState<WorksOpen>(worksFromRoute(route))
 
   // Keep the relevant branches open when the route changes elsewhere.
   useEffect(() => {
-    if (route.view === 'exhibitions' || route.view === 'paintings') {
-      setWorksOpen(true)
-    }
-    if (route.view === 'paintings') setPaintingsOpen(true)
-    if (route.view === 'cv' || route.view === 'contacts') setAboutOpen(true)
+    const nextTop = topFromRoute(route)
+    const nextWorks = worksFromRoute(route)
+    if (nextTop) setTopOpen(nextTop)
+    if (nextWorks) setWorksOpen(nextWorks)
   }, [route])
 
   return (
@@ -79,29 +92,59 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
       <div className="flex flex-col gap-5 text-base">
         {/* Works */}
         <div className="flex flex-col gap-2">
-          <MenuItem label="Works" onClick={() => setWorksOpen((v) => !v)} />
+          <MenuItem
+            label="Works"
+            onClick={() => setTopOpen((v) => (v === 'works' ? null : 'works'))}
+          />
           <AnimatePresence initial={false}>
-            {worksOpen && (
+            {topOpen === 'works' && (
               <motion.div {...reveal} className="flex flex-col gap-2 overflow-hidden">
+                {/* Exhibitions → Solo / Group */}
                 <MenuItem
                   label="Exhibitions"
                   indent={1}
-                  active={route.view === 'exhibitions'}
-                  onClick={() => onNavigate({ view: 'exhibitions' })}
+                  onClick={() =>
+                    setWorksOpen((v) => (v === 'exhibitions' ? null : 'exhibitions'))
+                  }
                 />
+                <AnimatePresence initial={false}>
+                  {worksOpen === 'exhibitions' && (
+                    <motion.div {...reveal} className="flex flex-col gap-1.5 overflow-hidden">
+                      <MenuItem
+                        label="Solo"
+                        indent={2}
+                        small
+                        active={route.view === 'exhibitions' && route.kind === 'solo'}
+                        onClick={() => onNavigate({ view: 'exhibitions', kind: 'solo' })}
+                      />
+                      <MenuItem
+                        label="Group"
+                        indent={2}
+                        small
+                        active={route.view === 'exhibitions' && route.kind === 'group'}
+                        onClick={() => onNavigate({ view: 'exhibitions', kind: 'group' })}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Paintings → years */}
                 <MenuItem
                   label="Paintings"
                   indent={1}
-                  onClick={() => setPaintingsOpen((v) => !v)}
+                  onClick={() =>
+                    setWorksOpen((v) => (v === 'paintings' ? null : 'paintings'))
+                  }
                 />
                 <AnimatePresence initial={false}>
-                  {paintingsOpen && (
-                    <motion.div {...reveal} className="flex flex-col gap-2 overflow-hidden">
+                  {worksOpen === 'paintings' && (
+                    <motion.div {...reveal} className="flex flex-col gap-1.5 overflow-hidden">
                       {paintingYears.map((year) => (
                         <MenuItem
                           key={year}
                           label={year}
                           indent={2}
+                          small
                           active={route.view === 'paintings' && route.year === year}
                           onClick={() => onNavigate({ view: 'paintings', year })}
                         />
@@ -116,9 +159,12 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
 
         {/* About */}
         <div className="flex flex-col gap-2">
-          <MenuItem label="About" onClick={() => setAboutOpen((v) => !v)} />
+          <MenuItem
+            label="About"
+            onClick={() => setTopOpen((v) => (v === 'about' ? null : 'about'))}
+          />
           <AnimatePresence initial={false}>
-            {aboutOpen && (
+            {topOpen === 'about' && (
               <motion.div {...reveal} className="flex flex-col gap-2 overflow-hidden">
                 <MenuItem
                   label="CV"

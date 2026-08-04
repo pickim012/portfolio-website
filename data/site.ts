@@ -10,12 +10,17 @@ export const artist = {
     'Kim, Yeadam is a contemporary painter based in Seoul.',
     'Her work explores stillness, memory, and the quiet weight of color — layered surfaces that ask to be looked at slowly.',
   ],
+  homeImage: {
+    src: '/home/featured.png',
+    alt: 'Featured abstract painting by Kim, Yeadam in soft off-white and sage tones',
+  },
 }
 
 export type Exhibition = {
   id: string
   title: string
   type: string
+  kind: 'solo' | 'group'
   date: string
   gallery: string
   address: string
@@ -27,6 +32,7 @@ export const exhibitions: Exhibition[] = [
     id: 'quiet-fields',
     title: 'Quiet Fields',
     type: 'Solo Exhibition',
+    kind: 'solo',
     date: '4 March – 12 April 2026',
     gallery: 'Baik Art',
     address: '58 Samcheong-ro, Jongno-gu, Seoul',
@@ -39,6 +45,7 @@ export const exhibitions: Exhibition[] = [
     id: 'between-surfaces',
     title: 'Between Surfaces',
     type: 'Group Exhibition',
+    kind: 'group',
     date: '18 September – 30 October 2025',
     gallery: 'Kukje Gallery',
     address: '54 Samcheong-ro, Jongno-gu, Seoul',
@@ -118,38 +125,37 @@ export const paintingsByYear: Record<string, Painting[]> = {
 
 export const paintingYears = ['2026', '2025', '2024', '2023'] as const
 
-export type CVEntry = {
-  year: string
-  items: string[]
+export type CVSection = {
+  heading: string
+  entries: string[]
 }
 
-export const cv: CVEntry[] = [
+export const cv: CVSection[] = [
   {
-    year: '2026',
-    items: ['Quiet Fields, Solo Exhibition, Baik Art, Seoul'],
-  },
-  {
-    year: '2025',
-    items: [
-      'Between Surfaces, Group Exhibition, Kukje Gallery, Seoul',
-      'Slow Light, Two-person Exhibition, Gallery Hyundai, Seoul',
+    heading: 'Solo Exhibitions',
+    entries: [
+      '2026, Three Books Resting, Shinhan Gallery, Seoul, Korea',
+      '2024, Mind () the () Gap, AB Gallery, Seoul, Korea',
     ],
   },
   {
-    year: '2024',
-    items: ['The Long Afternoon, Solo Exhibition, PKM Gallery, Seoul'],
+    heading: 'Group Exhibitions',
+    entries: [
+      '2026, I am Just Saying My Swan-song, Shinhan Gallery, Seoul, Korea',
+      '2025, Portrait, Den Art Gallery, Incheon, Korea',
+    ],
   },
   {
-    year: '2023',
-    items: [
-      'New Contemporaries, Group Exhibition, SeMA, Seoul',
-      'MFA, Painting, Hongik University, Seoul',
-    ],
+    heading: 'Education',
+    entries: ['2018, Glasgow School of Art (BA), Painting and Printmaking'],
+  },
+  {
+    heading: 'Awards',
+    entries: ['2018, The Armour Prize (Glasgow School of Art)'],
   },
 ]
 
 export const contacts = [
   { label: 'Email', value: 'studio@kimyeadam.com', href: 'mailto:studio@kimyeadam.com' },
   { label: 'Instagram', value: '@kim.yeadam', href: 'https://instagram.com/kim.yeadam' },
-  { label: 'Website', value: 'kimyeadam.com', href: 'https://kimyeadam.com' },
 ]
