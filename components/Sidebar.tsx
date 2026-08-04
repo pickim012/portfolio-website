@@ -39,15 +39,36 @@ function MenuItem({
   )
 }
 
-// Animate both height and opacity so expand and collapse are mirror images:
-// Framer Motion tweens through the real measured content height in each
-// direction (via AnimatePresence's exit), so siblings below shift smoothly
-// instead of snapping into place.
-const reveal = {
-  initial: { height: 0, opacity: 0 },
-  animate: { height: 'auto', opacity: 1 },
-  exit: { height: 0, opacity: 0 },
-  transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
+// Animate both height and opacity so expand and collapse are mirror images.
+// The spacing above the revealed items lives INSIDE the animated element (as
+// top padding on `innerClassName`) rather than as a parent flex `gap`. A
+// parent gap would stay reserved for this child until it unmounts, then
+// collapse instantly — the "snap" at the very end of a collapse. Keeping the
+// spacing inside the measured height means it eases away with everything else.
+function Collapse({
+  open,
+  innerClassName,
+  children,
+}: {
+  open: boolean
+  innerClassName: string
+  children: React.ReactNode
+}) {
+  return (
+    <AnimatePresence initial={false}>
+      {open && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+          className="overflow-hidden"
+        >
+          <div className={innerClassName}>{children}</div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 }
 
 export function SidebarMenu({ route, onNavigate }: SidebarProps) {
@@ -89,95 +110,86 @@ export function SidebarMenu({ route, onNavigate }: SidebarProps) {
         {artist.name.last}
       </button>
 
-      {/* Menu tree */}
+      {/* Menu tree. Each collapsible region is the LAST child of a no-gap
+          flex column, so there is never a reserved parent gap left to snap
+          when it unmounts. Vertical spacing between sibling *blocks* uses gap
+          on their static wrappers, which stay mounted and never snap. */}
       <div className="flex flex-col gap-5 text-base">
         {/* Works */}
-        <div className="flex flex-col gap-2">
-          <MenuItem
-            label="Works"
-            onClick={() => setWorksExpanded((v) => !v)}
-          />
-          <AnimatePresence initial={false}>
-            {worksExpanded && (
-              <motion.div {...reveal} className="flex flex-col gap-2 overflow-hidden">
-                {/* Exhibitions → Solo / Group */}
+        <div className="flex flex-col">
+          <MenuItem label="Works" onClick={() => setWorksExpanded((v) => !v)} />
+          <Collapse open={worksExpanded} innerClassName="flex flex-col gap-2 pt-2">
+            {/* Exhibitions → Solo / Group */}
+            <div className="flex flex-col">
+              <MenuItem
+                label="Exhibitions"
+                indent={1}
+                onClick={() => setExhibitionsExpanded((v) => !v)}
+              />
+              <Collapse
+                open={exhibitionsExpanded}
+                innerClassName="flex flex-col gap-1.5 pt-1.5"
+              >
                 <MenuItem
-                  label="Exhibitions"
-                  indent={1}
-                  onClick={() => setExhibitionsExpanded((v) => !v)}
+                  label="Solo"
+                  indent={2}
+                  small
+                  active={route.view === 'exhibitions' && route.kind === 'solo'}
+                  onClick={() => onNavigate({ view: 'exhibitions', kind: 'solo' })}
                 />
-                <AnimatePresence initial={false}>
-                  {exhibitionsExpanded && (
-                    <motion.div {...reveal} className="flex flex-col gap-1.5 overflow-hidden">
-                      <MenuItem
-                        label="Solo"
-                        indent={2}
-                        small
-                        active={route.view === 'exhibitions' && route.kind === 'solo'}
-                        onClick={() => onNavigate({ view: 'exhibitions', kind: 'solo' })}
-                      />
-                      <MenuItem
-                        label="Group"
-                        indent={2}
-                        small
-                        active={route.view === 'exhibitions' && route.kind === 'group'}
-                        onClick={() => onNavigate({ view: 'exhibitions', kind: 'group' })}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <MenuItem
+                  label="Group"
+                  indent={2}
+                  small
+                  active={route.view === 'exhibitions' && route.kind === 'group'}
+                  onClick={() => onNavigate({ view: 'exhibitions', kind: 'group' })}
+                />
+              </Collapse>
+            </div>
 
-                {/* Paintings → years */}
-                <MenuItem
-                  label="Paintings"
-                  indent={1}
-                  onClick={() => setPaintingsExpanded((v) => !v)}
-                />
-                <AnimatePresence initial={false}>
-                  {paintingsExpanded && (
-                    <motion.div {...reveal} className="flex flex-col gap-1.5 overflow-hidden">
-                      {paintingYears.map((year) => (
-                        <MenuItem
-                          key={year}
-                          label={year}
-                          indent={2}
-                          small
-                          active={route.view === 'paintings' && route.year === year}
-                          onClick={() => onNavigate({ view: 'paintings', year })}
-                        />
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            {/* Paintings → years */}
+            <div className="flex flex-col">
+              <MenuItem
+                label="Paintings"
+                indent={1}
+                onClick={() => setPaintingsExpanded((v) => !v)}
+              />
+              <Collapse
+                open={paintingsExpanded}
+                innerClassName="flex flex-col gap-1.5 pt-1.5"
+              >
+                {paintingYears.map((year) => (
+                  <MenuItem
+                    key={year}
+                    label={year}
+                    indent={2}
+                    small
+                    active={route.view === 'paintings' && route.year === year}
+                    onClick={() => onNavigate({ view: 'paintings', year })}
+                  />
+                ))}
+              </Collapse>
+            </div>
+          </Collapse>
         </div>
 
         {/* About */}
-        <div className="flex flex-col gap-2">
-          <MenuItem
-            label="About"
-            onClick={() => setAboutExpanded((v) => !v)}
-          />
-          <AnimatePresence initial={false}>
-            {aboutExpanded && (
-              <motion.div {...reveal} className="flex flex-col gap-2 overflow-hidden">
-                <MenuItem
-                  label="CV"
-                  indent={1}
-                  active={route.view === 'cv'}
-                  onClick={() => onNavigate({ view: 'cv' })}
-                />
-                <MenuItem
-                  label="Contacts"
-                  indent={1}
-                  active={route.view === 'contacts'}
-                  onClick={() => onNavigate({ view: 'contacts' })}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <div className="flex flex-col">
+          <MenuItem label="About" onClick={() => setAboutExpanded((v) => !v)} />
+          <Collapse open={aboutExpanded} innerClassName="flex flex-col gap-2 pt-2">
+            <MenuItem
+              label="CV"
+              indent={1}
+              active={route.view === 'cv'}
+              onClick={() => onNavigate({ view: 'cv' })}
+            />
+            <MenuItem
+              label="Contacts"
+              indent={1}
+              active={route.view === 'contacts'}
+              onClick={() => onNavigate({ view: 'contacts' })}
+            />
+          </Collapse>
         </div>
       </div>
     </div>
