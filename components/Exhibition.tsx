@@ -5,7 +5,7 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
   return (
     <article className="flex flex-col items-center">
       <header className="mb-12 flex flex-col items-center gap-1 text-center leading-[1.25]">
-        <h2 className="font-display text-2xl leading-[1.25] text-foreground text-balance">
+        <h2 className="font-display text-2xl italic leading-[1.25] text-foreground text-balance">
           {exhibition.title}
         </h2>
         <p className="mt-4 text-base leading-[1.25] text-secondary-ink">{exhibition.date}</p>
