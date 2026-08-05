@@ -21,7 +21,7 @@ export function Painting({ painting }: { painting: PublicPainting }) {
 
       <figcaption className="mt-6 flex flex-col items-center gap-0.5 text-center leading-[1.25]">
         <span className="font-serif text-sm italic text-foreground">{painting.title}</span>
-        <span className="font-serif text-sm font-light text-secondary-ink">{painting.details}</span>
+        <span className="font-serif text-xs font-light leading-[1.2] text-secondary-ink">{painting.details}</span>
       </figcaption>
     </figure>
   )
