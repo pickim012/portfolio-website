@@ -24,7 +24,6 @@ export function PaintingForm({
   const isEdit = Boolean(item)
 
   const [year, setYear] = useState<string>(String(item?.year ?? CURRENT_YEAR))
-  const [date, setDate] = useState(item?.date ?? "")
   const [title, setTitle] = useState(item?.title ?? "")
   const [details, setDetails] = useState(item?.details ?? "")
   const [images, setImages] = useState<ImageItem[]>(makeImageItems(item?.images ?? []))
@@ -34,7 +33,8 @@ export function PaintingForm({
   function buildInput() {
     return {
       year: Number(year),
-      date: date.trim(),
+      // Date field removed from the Paintings form; keep the input shape intact.
+      date: "",
       title: title.trim(),
       details: details.trim(),
       images: images.map((i) => i.url.trim()).filter(Boolean),
@@ -87,10 +87,6 @@ export function PaintingForm({
           onChange={(e) => setYear(e.target.value)}
           className="max-w-40"
         />
-      </Field>
-
-      <Field label="Date" hint="Free text for display, e.g. “March 2026”.">
-        <TextInput value={date} onChange={(e) => setDate(e.target.value)} placeholder="March 2026" />
       </Field>
 
       <Field label="Title">
