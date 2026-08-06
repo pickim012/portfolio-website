@@ -71,7 +71,7 @@ function Paintings({
 }) {
   const works = paintingsByYear[year] ?? []
   return (
-    <section className="flex flex-col gap-20 py-4">
+    <section className="flex flex-col gap-24 py-4">
       {works.length === 0 ? (
         <p className="text-center text-base text-secondary-ink">
           No works for {year}.
