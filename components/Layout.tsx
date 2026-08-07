@@ -162,7 +162,7 @@ export function Layout({ content }: { content: SiteContent }) {
       />
 
       {/* True three-column grid: | Sidebar | Content | Navigator | */}
-      <div className="mx-auto grid max-w-[1440px] grid-cols-1 px-5 pb-32 pt-24 md:grid-cols-[200px_minmax(0,800px)_200px] md:justify-center md:gap-x-16 md:px-10 md:pt-[60px] lg:gap-x-24">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-1 px-5 pb-32 pt-24 md:grid-cols-[170px_minmax(0,1fr)_140px] md:justify-center md:gap-x-10 md:px-10 md:pt-[60px] lg:gap-x-16">
         {/* Column 1 — Sidebar */}
         <aside className="hidden md:block">
           <div className="sticky top-[60px]">
