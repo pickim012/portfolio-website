@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, EB_Garamond } from 'next/font/google'
+import { SmoothScroll } from '@/components/SmoothScroll'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -59,8 +60,10 @@ export default function RootLayout({
       className={`${playfair.variable} ${ebGaramond.variable} bg-background`}
     >
       <body className="font-serif antialiased">
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        <SmoothScroll>
+          {children}
+          {process.env.NODE_ENV === 'production' && <Analytics />}
+        </SmoothScroll>
       </body>
     </html>
   )
