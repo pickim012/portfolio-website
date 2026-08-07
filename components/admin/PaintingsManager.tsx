@@ -223,7 +223,6 @@ function Row({
       <span className="min-w-0 flex-1 truncate text-sm font-medium text-neutral-900">
         {item.title || "(untitled)"}
       </span>
-      <span className="shrink-0 text-sm text-neutral-500">{item.date}</span>
     </li>
   )
 }
