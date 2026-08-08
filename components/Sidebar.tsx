@@ -11,6 +11,7 @@ type SidebarProps = {
   onNavigate: (route: Route) => void
   paintingYears: string[]
   isHome?: boolean
+  showIdentity?: boolean
 }
 
 // Shared easing/duration used by both the height collapse and the sibling
@@ -80,7 +81,13 @@ function Collapse({
   )
 }
 
-export function SidebarMenu({ route, onNavigate, paintingYears, isHome = false }: SidebarProps) {
+export function SidebarMenu({
+  route,
+  onNavigate,
+  paintingYears,
+  isHome = false,
+  showIdentity = true,
+}: SidebarProps) {
   const [homeMenuExpanded, setHomeMenuExpanded] = useState(!isHome)
 
   useEffect(() => {
@@ -115,19 +122,21 @@ export function SidebarMenu({ route, onNavigate, paintingYears, isHome = false }
   return (
     <div className="flex flex-col gap-10">
       {/* Artist name → Home */}
-      <button
-        type="button"
-        onClick={() => {
-          if (isHome) setHomeMenuExpanded((value) => !value)
-          else onNavigate({ view: 'home' })
-        }}
-        aria-expanded={isHome ? homeMenuExpanded : undefined}
-        className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200"
-      >
-        {ARTIST_NAME.first}
-        <br />
-        {ARTIST_NAME.last}
-      </button>
+      {showIdentity && (
+        <button
+          type="button"
+          onClick={() => {
+            if (isHome) setHomeMenuExpanded((value) => !value)
+            else onNavigate({ view: 'home' })
+          }}
+          aria-expanded={isHome ? homeMenuExpanded : undefined}
+          className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200"
+        >
+          {ARTIST_NAME.first}
+          <br />
+          {ARTIST_NAME.last}
+        </button>
+      )}
 
       {/* Menu tree. Each collapsible region is the LAST child of a no-gap
           flex column, so there is never a reserved parent gap left to snap
@@ -226,15 +235,26 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
 
   return (
     <div className="md:hidden">
-      {/* Mobile hamburger */}
-      <button
-        type="button"
-        aria-label="Open menu"
-        onClick={() => setMobileOpen(true)}
-        className="fixed left-5 top-6 z-40 text-foreground"
-      >
-        <Menu className="h-6 w-6" strokeWidth={1} />
-      </button>
+      <header className="fixed inset-x-0 top-0 z-40 flex items-start justify-between px-5 pt-6">
+        <button
+          type="button"
+          onClick={() => handleNavigate({ view: 'home' })}
+          aria-label="Go to home"
+          className="text-left font-display text-2xl leading-[1.15] text-foreground"
+        >
+          {ARTIST_NAME.first}
+          <br />
+          {ARTIST_NAME.last}
+        </button>
+        <button
+          type="button"
+          aria-label="Open menu"
+          onClick={() => setMobileOpen(true)}
+          className="text-foreground"
+        >
+          <Menu className="h-6 w-6" strokeWidth={1} />
+        </button>
+      </header>
 
       <AnimatePresence>
         {mobileOpen && (
@@ -245,6 +265,16 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 bg-background px-6 py-6"
           >
+            <button
+              type="button"
+              onClick={() => handleNavigate({ view: 'home' })}
+              aria-label="Go to home"
+              className="font-display text-left text-2xl leading-[1.15] text-foreground"
+            >
+              {ARTIST_NAME.first}
+              <br />
+              {ARTIST_NAME.last}
+            </button>
             <button
               type="button"
               aria-label="Close menu"
@@ -258,7 +288,8 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
                 route={route}
                 onNavigate={handleNavigate}
                 paintingYears={paintingYears}
-                isHome={isHome}
+                isHome={false}
+                showIdentity={false}
               />
             </div>
           </motion.div>
