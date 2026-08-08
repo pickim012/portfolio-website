@@ -17,7 +17,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     })
 
     const resetScroll = () => {
-      lenis.scrollTo(0, { immediate: true })
+      lenis.scrollTo(0, { immediate: true, force: true })
     }
     window.addEventListener('site:navigate', resetScroll)
 

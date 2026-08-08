@@ -145,9 +145,10 @@ export function Layout({ content }: { content: SiteContent }) {
 
   const handleNavigate = (next: Route) => {
     if (routeKey(next) === routeKey(route)) return
-    setRoute(next)
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    // Reset the current scroll synchronously before AnimatePresence swaps pages.
     window.dispatchEvent(new CustomEvent('site:navigate'))
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    setRoute(next)
   }
 
   return (
