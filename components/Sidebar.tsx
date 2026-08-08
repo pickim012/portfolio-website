@@ -240,23 +240,34 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
 
   return (
     <div className="md:hidden">
-      <header className="fixed left-5 top-6 z-40 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => handleNavigate({ view: 'home' })}
-          aria-label="Go to home"
-          className="text-left font-display text-2xl leading-[1.15] text-foreground"
-        >
-          {ARTIST_NAME.first} {ARTIST_NAME.last}
-        </button>
-        <button
-          type="button"
-          aria-label="Open menu"
-          onClick={() => setMobileOpen(true)}
-          className="text-secondary-ink"
-        >
-          <Menu className="h-5 w-5" strokeWidth={1} />
-        </button>
+      <header className="fixed left-5 top-6 z-40">
+        <div className="font-display text-2xl leading-[1.15] text-foreground">
+          <button
+            type="button"
+            onClick={() => handleNavigate({ view: 'home' })}
+            aria-label="Go to home"
+            className="block text-left"
+          >
+            {ARTIST_NAME.first}
+          </button>
+          <span className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => handleNavigate({ view: 'home' })}
+              className="text-left"
+            >
+              {ARTIST_NAME.last}
+            </button>
+            <button
+              type="button"
+              aria-label="Open menu"
+              onClick={() => setMobileOpen(true)}
+              className="text-secondary-ink"
+            >
+              <Menu className="h-4 w-4" strokeWidth={1} />
+            </button>
+          </span>
+        </div>
       </header>
 
       <AnimatePresence>
