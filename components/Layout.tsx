@@ -144,8 +144,10 @@ export function Layout({ content }: { content: SiteContent }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
 
   const handleNavigate = (next: Route) => {
+    if (routeKey(next) === routeKey(route)) return
     setRoute(next)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    window.dispatchEvent(new CustomEvent('site:navigate'))
   }
 
   return (

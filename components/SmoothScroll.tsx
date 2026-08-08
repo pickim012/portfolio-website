@@ -16,6 +16,11 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       syncTouch: false,
     })
 
+    const resetScroll = () => {
+      lenis.scrollTo(0, { immediate: true })
+    }
+    window.addEventListener('site:navigate', resetScroll)
+
     let frame = 0
     const raf = (time: number) => {
       lenis.raf(time)
@@ -24,6 +29,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     frame = window.requestAnimationFrame(raf)
 
     return () => {
+      window.removeEventListener('site:navigate', resetScroll)
       window.cancelAnimationFrame(frame)
       lenis.destroy()
     }
