@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
 import { SidebarMenu, MobileMenu } from './Sidebar'
@@ -142,10 +142,30 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
 
 export function Layout({ content }: { content: SiteContent }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
+  const [homeLeaving, setHomeLeaving] = useState(false)
+  const homeLeaveTimer = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (homeLeaveTimer.current !== null) window.clearTimeout(homeLeaveTimer.current)
+    }
+  }, [])
 
   const handleNavigate = (next: Route) => {
-    if (routeKey(next) === routeKey(route)) return
-    // Keep the outgoing page at its current position; scroll resets after it exits.
+    if (routeKey(next) === routeKey(route) || homeLeaving) return
+
+    // Home uses a wider grid than interior pages. Fade it out before changing
+    // the grid, so the outgoing image never visibly reflows into a smaller size.
+    if (route.view === 'home') {
+      setHomeLeaving(true)
+      homeLeaveTimer.current = window.setTimeout(() => {
+        setRoute(next)
+        setHomeLeaving(false)
+      }, 350)
+      return
+    }
+
+    // Keep other outgoing pages at their current position; scroll resets after exit.
     setRoute(next)
   }
 
@@ -191,7 +211,7 @@ export function Layout({ content }: { content: SiteContent }) {
             <motion.div
               key={routeKey(route)}
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              animate={{ opacity: homeLeaving ? 0 : 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
