@@ -240,24 +240,22 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
 
   return (
     <div className="md:hidden">
-      <header className="fixed left-5 top-6 z-40 flex flex-col items-start gap-3">
+      <header className="fixed left-5 top-6 z-40 flex items-center gap-2">
         <button
           type="button"
           onClick={() => handleNavigate({ view: 'home' })}
           aria-label="Go to home"
           className="text-left font-display text-2xl leading-[1.15] text-foreground"
         >
-          {ARTIST_NAME.first}
-          <br />
-          {ARTIST_NAME.last}
+          {ARTIST_NAME.first} {ARTIST_NAME.last}
         </button>
         <button
           type="button"
           aria-label="Open menu"
           onClick={() => setMobileOpen(true)}
-          className="text-foreground"
+          className="text-secondary-ink"
         >
-          <Menu className="h-6 w-6" strokeWidth={1} />
+          <Menu className="h-5 w-5" strokeWidth={1} />
         </button>
       </header>
 
