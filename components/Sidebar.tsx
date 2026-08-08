@@ -12,6 +12,7 @@ type SidebarProps = {
   paintingYears: string[]
   isHome?: boolean
   showIdentity?: boolean
+  showHomeItem?: boolean
 }
 
 // Shared easing/duration used by both the height collapse and the sibling
@@ -87,6 +88,7 @@ export function SidebarMenu({
   paintingYears,
   isHome = false,
   showIdentity = true,
+  showHomeItem = false,
 }: SidebarProps) {
   const [homeMenuExpanded, setHomeMenuExpanded] = useState(!isHome)
 
@@ -143,6 +145,9 @@ export function SidebarMenu({
           when it unmounts. Vertical spacing between sibling *blocks* uses gap
           on their static wrappers, which stay mounted and never snap. */}
       <Collapse open={!isHome || homeMenuExpanded} innerClassName="flex flex-col gap-4 text-base">
+        {showHomeItem && (
+          <MenuItem label="Home" active={route.view === 'home'} onClick={() => onNavigate({ view: 'home' })} />
+        )}
         {/* Works */}
         <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
           <MenuItem label="Works" onClick={() => setWorksExpanded((v) => !v)} />
@@ -235,7 +240,7 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
 
   return (
     <div className="md:hidden">
-      <header className="fixed inset-x-0 top-0 z-40 flex items-start justify-between px-5 pt-6">
+      <header className="fixed left-5 top-6 z-40 flex flex-col items-start gap-3">
         <button
           type="button"
           onClick={() => handleNavigate({ view: 'home' })}
@@ -267,16 +272,6 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
           >
             <button
               type="button"
-              onClick={() => handleNavigate({ view: 'home' })}
-              aria-label="Go to home"
-              className="font-display text-left text-2xl leading-[1.15] text-foreground"
-            >
-              {ARTIST_NAME.first}
-              <br />
-              {ARTIST_NAME.last}
-            </button>
-            <button
-              type="button"
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
               className="absolute right-5 top-6 text-foreground"
@@ -290,6 +285,7 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
                 paintingYears={paintingYears}
                 isHome={false}
                 showIdentity={false}
+                showHomeItem
               />
             </div>
           </motion.div>
