@@ -155,14 +155,17 @@ export function Layout({ content }: { content: SiteContent }) {
         route={route}
         onNavigate={handleNavigate}
         paintingYears={content.paintingYears}
+        isHome={route.view === 'home'}
       />
-      <Navigator
-        route={route}
-        className="pointer-events-none fixed right-5 top-7 z-30 md:hidden"
-      />
+      {route.view !== 'home' && (
+        <Navigator
+          route={route}
+          className="pointer-events-none fixed right-5 top-7 z-30 md:hidden"
+        />
+      )}
 
       {/* True three-column grid: | Sidebar | Content | Navigator | */}
-      <div className="mx-auto grid max-w-[1440px] grid-cols-1 px-5 pb-32 pt-24 md:grid-cols-[170px_minmax(0,1fr)_140px] md:justify-center md:gap-x-10 md:px-10 md:pt-[60px] lg:gap-x-16">
+      <div className={`mx-auto grid max-w-[1440px] grid-cols-1 px-5 pb-32 pt-24 md:px-10 md:pt-[60px] ${route.view === 'home' ? 'md:grid-cols-[170px_minmax(0,1fr)] md:gap-x-10' : 'md:grid-cols-[170px_minmax(0,1fr)_140px] md:justify-center md:gap-x-10 lg:gap-x-16'}`}>
         {/* Column 1 — Sidebar */}
         <aside className="hidden md:block">
           <div className="sticky top-[60px]">
@@ -170,6 +173,7 @@ export function Layout({ content }: { content: SiteContent }) {
               route={route}
               onNavigate={handleNavigate}
               paintingYears={content.paintingYears}
+              isHome={route.view === 'home'}
             />
           </div>
         </aside>
@@ -189,12 +193,14 @@ export function Layout({ content }: { content: SiteContent }) {
           </AnimatePresence>
         </main>
 
-        {/* Column 3 — Navigator (reserved, never overlaps content) */}
-        <div className="hidden md:block">
-          <div className="sticky top-[60px]">
-            <Navigator route={route} />
+        {/* Column 3 — Navigator (reserved on non-home pages only) */}
+        {route.view !== 'home' && (
+          <div className="hidden md:block">
+            <div className="sticky top-[60px]">
+              <Navigator route={route} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

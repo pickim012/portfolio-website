@@ -10,6 +10,7 @@ type SidebarProps = {
   route: Route
   onNavigate: (route: Route) => void
   paintingYears: string[]
+  isHome?: boolean
 }
 
 // Shared easing/duration used by both the height collapse and the sibling
@@ -79,7 +80,13 @@ function Collapse({
   )
 }
 
-export function SidebarMenu({ route, onNavigate, paintingYears }: SidebarProps) {
+export function SidebarMenu({ route, onNavigate, paintingYears, isHome = false }: SidebarProps) {
+  const [homeMenuExpanded, setHomeMenuExpanded] = useState(!isHome)
+
+  useEffect(() => {
+    setHomeMenuExpanded(!isHome)
+  }, [isHome])
+
   // Independent toggle state: each submenu opens/closes on its own,
   // and opening one never collapses the others.
   const [worksExpanded, setWorksExpanded] = useState(
@@ -110,7 +117,11 @@ export function SidebarMenu({ route, onNavigate, paintingYears }: SidebarProps) 
       {/* Artist name → Home */}
       <button
         type="button"
-        onClick={() => onNavigate({ view: 'home' })}
+        onClick={() => {
+          if (isHome) setHomeMenuExpanded((value) => !value)
+          else onNavigate({ view: 'home' })
+        }}
+        aria-expanded={isHome ? homeMenuExpanded : undefined}
         className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200"
       >
         {ARTIST_NAME.first}
@@ -122,7 +133,7 @@ export function SidebarMenu({ route, onNavigate, paintingYears }: SidebarProps) 
           flex column, so there is never a reserved parent gap left to snap
           when it unmounts. Vertical spacing between sibling *blocks* uses gap
           on their static wrappers, which stay mounted and never snap. */}
-      <div className="flex flex-col gap-5 text-base">
+      <Collapse open={!isHome || homeMenuExpanded} innerClassName="flex flex-col gap-4 text-base">
         {/* Works */}
         <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
           <MenuItem label="Works" onClick={() => setWorksExpanded((v) => !v)} />
@@ -199,12 +210,12 @@ export function SidebarMenu({ route, onNavigate, paintingYears }: SidebarProps) 
             />
           </Collapse>
         </motion.div>
-      </div>
+      </Collapse>
     </div>
   )
 }
 
-export function MobileMenu({ route, onNavigate, paintingYears }: SidebarProps) {
+export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   // Close the mobile drawer whenever navigation completes.
@@ -247,6 +258,7 @@ export function MobileMenu({ route, onNavigate, paintingYears }: SidebarProps) {
                 route={route}
                 onNavigate={handleNavigate}
                 paintingYears={paintingYears}
+                isHome={isHome}
               />
             </div>
           </motion.div>
