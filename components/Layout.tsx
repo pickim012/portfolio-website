@@ -145,9 +145,7 @@ export function Layout({ content }: { content: SiteContent }) {
 
   const handleNavigate = (next: Route) => {
     if (routeKey(next) === routeKey(route)) return
-    // Reset the current scroll synchronously before AnimatePresence swaps pages.
-    window.dispatchEvent(new CustomEvent('site:navigate'))
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    // Keep the outgoing page at its current position; scroll resets after it exits.
     setRoute(next)
   }
 
@@ -183,7 +181,13 @@ export function Layout({ content }: { content: SiteContent }) {
 
         {/* Column 2 — Content */}
         <main className="w-full">
-          <AnimatePresence mode="wait">
+          <AnimatePresence
+            mode="wait"
+            onExitComplete={() => {
+              window.dispatchEvent(new CustomEvent('site:navigate'))
+              window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+            }}
+          >
             <motion.div
               key={routeKey(route)}
               initial={{ opacity: 0 }}
