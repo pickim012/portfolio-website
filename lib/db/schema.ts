@@ -47,6 +47,7 @@ export const paintings = pgTable('paintings', {
 export const cvContent = pgTable('cv_content', {
   id: integer('id').primaryKey().default(1),
   sections: jsonb('sections').notNull().default([]),
+  links: jsonb('links').notNull().default([]), // ordered CvLink[] shown at the bottom of the CV
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 

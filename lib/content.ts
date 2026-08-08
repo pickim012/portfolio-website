@@ -11,6 +11,7 @@ import {
   type AdminExhibition,
   type AdminPainting,
   type ContactField,
+  type CvLink,
   type CvSection,
   type PublicContact,
   type PublicExhibition,
@@ -94,6 +95,11 @@ export async function getSiteContent(): Promise<SiteContent> {
   const cv = cvSections
     .filter((s) => s.visible && (s.content.trim() !== '' || s.kind === 'fixed'))
     .map((s) => ({ id: s.id, label: s.label, content: s.content }))
+
+  // Links section: keep admin order, drop entries missing a title or URL.
+  const cvLinks = ((cvRows[0]?.links as CvLink[] | undefined) ?? [])
+    .filter((l) => l.title.trim() !== '' && l.url.trim() !== '')
+    .map((l) => ({ id: l.id, title: l.title.trim(), url: l.url.trim() }))
 
   const contactFields =
     (contactRows[0]?.fields as ContactField[] | undefined) ?? defaultContactFields()

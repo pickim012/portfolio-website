@@ -34,6 +34,13 @@ export type ContactField = {
   value: string // fixed: the value; custom: free text content
 }
 
+// A single CV link item (rendered as a clickable link at the bottom of the CV).
+export type CvLink = {
+  id: string
+  title: string // text shown on the front-end
+  url: string // destination
+}
+
 export function defaultCvSections(): CvSection[] {
   const fixed: CvSection[] = CV_FIXED.map((s) => ({
     id: s.id,
@@ -105,6 +112,7 @@ export type SiteContent = {
   paintingsByYear: Record<string, PublicPainting[]>
   paintingYears: string[]
   cv: { id: string; label: string; content: string }[]
+  cvLinks: CvLink[]
   contacts: PublicContact[]
 }
 
