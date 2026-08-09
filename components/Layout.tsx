@@ -83,7 +83,7 @@ function Paintings({
   )
 }
 
-function CV({ cv }: { cv: SiteContent['cv'] }) {
+function CV({ cv, cvLinks }: { cv: SiteContent['cv']; cvLinks: SiteContent['cvLinks'] }) {
   return (
     <section className="flex flex-col gap-8 py-4">
       <h1 className="font-display text-xl leading-[1.3] text-foreground">CV</h1>
@@ -95,6 +95,21 @@ function CV({ cv }: { cv: SiteContent['cv'] }) {
           </p>
         </div>
       ))}
+      {cvLinks.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {cvLinks.map((link) => (
+            <a
+              key={link.id}
+              href={link.url}
+              target={link.url.startsWith('http') ? '_blank' : undefined}
+              rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="text-base leading-[1.6] text-foreground underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+            >
+              {link.title}
+            </a>
+          ))}
+        </div>
+      )}
     </section>
   )
 }
@@ -134,7 +149,7 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
     case 'paintings':
       return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} />
     case 'cv':
-      return <CV cv={content.cv} />
+      return <CV cv={content.cv} cvLinks={content.cvLinks} />
     case 'contacts':
       return <Contacts contacts={content.contacts} />
   }

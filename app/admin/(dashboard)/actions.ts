@@ -12,6 +12,7 @@ import {
 } from '@/lib/db/schema'
 import type {
   ContactField,
+  CvLink,
   CvSection,
   ExhibitionInput,
   PaintingInput,
@@ -165,14 +166,14 @@ export async function reorderPaintings(year: number, orderedIds: number[]) {
 // ---------------------------------------------------------------------------
 // CV + Contacts (singletons saved all at once)
 // ---------------------------------------------------------------------------
-export async function saveCv(sections: CvSection[]) {
+export async function saveCv(sections: CvSection[], links: CvLink[]) {
   await assertAdmin()
   await db
     .insert(cvContent)
-    .values({ id: 1, sections, updatedAt: new Date() })
+    .values({ id: 1, sections, links, updatedAt: new Date() })
     .onConflictDoUpdate({
       target: cvContent.id,
-      set: { sections, updatedAt: new Date() },
+      set: { sections, links, updatedAt: new Date() },
     })
   revalidateAll()
 }

@@ -161,9 +161,12 @@ export async function getPaintingsForAdmin(): Promise<AdminPainting[]> {
   }))
 }
 
-export async function getCvForAdmin(): Promise<CvSection[]> {
+export async function getCvForAdmin(): Promise<{ sections: CvSection[]; links: CvLink[] }> {
   const rows = await db.select().from(cvContent).limit(1)
-  return (rows[0]?.sections as CvSection[] | undefined) ?? defaultCvSections()
+  return {
+    sections: (rows[0]?.sections as CvSection[] | undefined) ?? defaultCvSections(),
+    links: (rows[0]?.links as CvLink[] | undefined) ?? [],
+  }
 }
 
 export async function getContactsForAdmin(): Promise<ContactField[]> {
