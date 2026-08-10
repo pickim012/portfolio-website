@@ -95,7 +95,7 @@ function CV({
       <h1 className="font-display text-xl leading-[1.2] text-foreground">CV</h1>
       {cv.map((section) => (
         <div key={section.id} className="flex flex-col gap-1">
-          <h2 className="text-base leading-[1.2] text-secondary-ink">{section.label}</h2>
+          <h2 className="text-base leading-[1.2] text-secondary-ink">{section.label === 'Group Exhibitions' ? 'Selected Group Exhibitions' : section.label}</h2>
           <p className="whitespace-pre-line pl-2 text-base leading-[1.45] text-foreground/75">
             {section.content}
           </p>
