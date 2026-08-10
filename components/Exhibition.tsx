@@ -8,9 +8,9 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
         <h2 className="font-display text-2xl italic leading-[1.25] text-foreground text-balance">
           {exhibition.title}
         </h2>
-        <p className="mt-4 text-base leading-[1.25] text-secondary-ink">{exhibition.date}</p>
-        <p className="text-base leading-[1.25] text-secondary-ink">{exhibition.gallery}</p>
-        <p className="text-base leading-[1.25] text-secondary-ink">{exhibition.address}</p>
+        <p className="mt-4 text-base leading-[1.15] text-secondary-ink">{exhibition.date}</p>
+        <p className="text-base leading-[1.15] text-secondary-ink">{exhibition.gallery}</p>
+        <p className="text-base leading-[1.15] text-secondary-ink">{exhibition.address}</p>
       </header>
 
       <div className="flex w-full flex-col gap-10">
