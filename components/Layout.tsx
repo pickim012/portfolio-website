@@ -86,31 +86,24 @@ function Paintings({
 function CV({
   cv,
   cvLinks,
-  bio,
 }: {
   cv: SiteContent['cv']
   cvLinks: SiteContent['cvLinks']
-  bio: string
 }) {
   return (
     <section className="flex flex-col gap-8 py-4">
       <h1 className="font-display text-xl leading-[1.2] text-foreground">CV</h1>
-      {bio.trim() && (
-        <p className="-mt-4 whitespace-pre-line text-base leading-[1.45] text-foreground/75">
-          {bio}
-        </p>
-      )}
       {cv.map((section) => (
-        <div key={section.id} className="flex flex-col gap-2">
-          <h2 className="text-lg leading-[1.2] text-secondary-ink">{section.label}</h2>
+        <div key={section.id} className="flex flex-col gap-1">
+          <h2 className="text-base leading-[1.2] text-secondary-ink">{section.label}</h2>
           <p className="whitespace-pre-line pl-4 text-base leading-[1.45] text-foreground/75">
             {section.content}
           </p>
         </div>
       ))}
       {cvLinks.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <h2 className="text-lg leading-[1.2] text-secondary-ink">Links</h2>
+        <div className="flex flex-col gap-1">
+          <h2 className="text-base leading-[1.2] text-secondary-ink">Links</h2>
           <div className="flex flex-col gap-1 pl-4">
             {cvLinks.map((link) => (
               <a
@@ -166,7 +159,7 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
     case 'paintings':
       return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} />
     case 'cv':
-      return <CV cv={content.cv} cvLinks={content.cvLinks} bio={content.home.body} />
+      return <CV cv={content.cv} cvLinks={content.cvLinks} />
     case 'contacts':
       return <Contacts contacts={content.contacts} />
   }
