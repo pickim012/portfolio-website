@@ -113,7 +113,15 @@ export async function getSiteContent(): Promise<SiteContent> {
       href: contactHref(f.id, f.value),
     }))
 
-  return { home, exhibitions: publishedExhibitions, paintingsByYear, paintingYears, cv, contacts }
+  return {
+    home,
+    exhibitions: publishedExhibitions,
+    paintingsByYear,
+    paintingYears,
+    cv,
+    cvLinks,
+    contacts,
+  }
 }
 
 // ---------------------------------------------------------------------------
