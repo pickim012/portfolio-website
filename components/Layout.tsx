@@ -96,7 +96,7 @@ function CV({
       {cv.map((section) => (
         <div key={section.id} className="flex flex-col gap-1">
           <h2 className="text-base leading-[1.2] text-secondary-ink">{section.label}</h2>
-          <p className="whitespace-pre-line pl-4 text-base leading-[1.45] text-foreground/75">
+          <p className="whitespace-pre-line pl-2 text-base leading-[1.45] text-foreground/75">
             {section.content}
           </p>
         </div>
@@ -104,7 +104,7 @@ function CV({
       {cvLinks.length > 0 && (
         <div className="flex flex-col gap-1">
           <h2 className="text-base leading-[1.2] text-secondary-ink">Links</h2>
-          <div className="flex flex-col gap-1 pl-4">
+          <div className="flex flex-col gap-1 pl-2">
             {cvLinks.map((link) => (
               <a
                 key={link.id}
@@ -129,18 +129,18 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
       <h1 className="font-display text-xl leading-[1.3] text-foreground">Contacts</h1>
       {contacts.map((contact) => (
         <div key={contact.id} className="flex flex-col gap-2">
-          <span className="text-lg leading-[1.3] text-secondary-ink">{contact.label}</span>
+          <span className="text-base leading-[1.2] text-secondary-ink">{contact.label}</span>
           {contact.href ? (
             <a
               href={contact.href}
               target={contact.href.startsWith('http') ? '_blank' : undefined}
               rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="pl-4 text-base leading-[1.6] text-foreground/75 transition-colors duration-200 hover:text-hover-ink"
+              className="pl-2 text-base leading-[1.6] text-foreground/75 transition-colors duration-200 hover:text-hover-ink"
             >
               {contact.value}
             </a>
           ) : (
-            <p className="whitespace-pre-line pl-4 text-base leading-[1.6] text-foreground/75">
+            <p className="whitespace-pre-line pl-2 text-base leading-[1.6] text-foreground/75">
               {contact.value}
             </p>
           )}
