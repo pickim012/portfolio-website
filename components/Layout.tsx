@@ -13,7 +13,7 @@ import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 function Home({ home }: { home: SiteContent['home'] }) {
   const paragraphs = home.body.split(/\n{2,}/).filter((p) => p.trim() !== '')
   return (
-    <section className="flex flex-col gap-8 py-4">
+    <section className="flex flex-col gap-3 py-4">
       {home.imageSrc ? (
         <Image
           src={home.imageSrc || '/placeholder.svg'}
@@ -25,11 +25,11 @@ function Home({ home }: { home: SiteContent['home'] }) {
           className="h-auto w-full"
         />
       ) : null}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-end gap-4 text-right">
         {paragraphs.map((line, i) => (
           <p
             key={i}
-            className="whitespace-pre-line text-lg leading-[1.25] text-foreground text-pretty"
+            className="whitespace-pre-line text-base leading-[1.45] text-secondary-ink text-pretty"
           >
             {line}
           </p>
