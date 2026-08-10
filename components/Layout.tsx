@@ -29,7 +29,7 @@ function Home({ home }: { home: SiteContent['home'] }) {
         {paragraphs.map((line, i) => (
           <p
             key={i}
-            className="whitespace-pre-line text-lg leading-[1.35] text-foreground text-pretty"
+            className="whitespace-pre-line text-lg leading-[1.25] text-foreground text-pretty"
           >
             {line}
           </p>
@@ -94,23 +94,23 @@ function CV({
 }) {
   return (
     <section className="flex flex-col gap-8 py-4">
-      <h1 className="font-display text-xl leading-[1.3] text-foreground">CV</h1>
+      <h1 className="font-display text-xl leading-[1.2] text-foreground">CV</h1>
       {bio.trim() && (
-        <p className="-mt-4 whitespace-pre-line text-base leading-[1.6] text-foreground/75">
+        <p className="-mt-4 whitespace-pre-line text-base leading-[1.45] text-foreground/75">
           {bio}
         </p>
       )}
       {cv.map((section) => (
         <div key={section.id} className="flex flex-col gap-2">
-          <h2 className="text-lg leading-[1.3] text-secondary-ink">{section.label}</h2>
-          <p className="whitespace-pre-line pl-4 text-base leading-[1.6] text-foreground/75">
+          <h2 className="text-lg leading-[1.2] text-secondary-ink">{section.label}</h2>
+          <p className="whitespace-pre-line pl-4 text-base leading-[1.45] text-foreground/75">
             {section.content}
           </p>
         </div>
       ))}
       {cvLinks.length > 0 && (
         <div className="flex flex-col gap-2">
-          <h2 className="text-lg leading-[1.3] text-secondary-ink">Links</h2>
+          <h2 className="text-lg leading-[1.2] text-secondary-ink">Links</h2>
           <div className="flex flex-col gap-1 pl-4">
             {cvLinks.map((link) => (
               <a
@@ -118,7 +118,7 @@ function CV({
                 href={link.url}
                 target={link.url.startsWith('http') ? '_blank' : undefined}
                 rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="text-base leading-[1.6] text-foreground/75 underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+                className="text-base leading-[1.45] text-foreground/75 underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
               >
                 {link.title}
               </a>
