@@ -128,7 +128,7 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
     <section className="flex flex-col gap-6 py-4">
       <h1 className="font-display text-xl leading-[1.3] text-foreground">Contacts</h1>
       {contacts.map((contact) => (
-        <div key={contact.id} className="flex flex-col gap-2">
+        <div key={contact.id} className="flex flex-col gap-1">
           <span className="text-base leading-[1.2] text-secondary-ink">{contact.label}</span>
           {contact.href ? (
             <a
