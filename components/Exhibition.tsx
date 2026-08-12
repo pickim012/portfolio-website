@@ -35,7 +35,7 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
       )}
 
       {exhibition.links.length > 0 && (
-        <div className="mt-8 flex w-full justify-start pl-2 text-left text-base leading-[1.45] text-secondary-ink">
+        <div className="mt-8 w-full pl-2 text-left text-base leading-[1.45] text-secondary-ink">
           {exhibition.links.map((link, index) => (
             <span key={link.id}>
               <a
