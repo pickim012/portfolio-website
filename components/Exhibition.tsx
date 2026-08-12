@@ -29,13 +29,13 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
       </div>
 
       {exhibition.about.trim() !== '' && (
-        <p className="mt-12 w-full whitespace-pre-line text-base leading-relaxed text-secondary-ink">
+        <p className="mt-12 w-full whitespace-pre-line pl-2 text-base leading-relaxed text-secondary-ink">
           {exhibition.about}
         </p>
       )}
 
       {exhibition.links.length > 0 && (
-        <div className="mt-8 flex w-full justify-end text-right text-base leading-[1.45] text-secondary-ink">
+        <div className="mt-8 flex w-full justify-start pl-2 text-left text-base leading-[1.45] text-secondary-ink">
           {exhibition.links.map((link, index) => (
             <span key={link.id}>
               <a
