@@ -64,18 +64,21 @@ function Exhibitions({
 
 function Texts({ links }: { links: SiteContent['textsLinks'] }) {
   return (
-    <section className="flex flex-col gap-4 py-4">
-      {links.map((link) => (
-        <a
-          key={link.id}
-          href={link.url}
-          target={link.url.startsWith('http') ? '_blank' : undefined}
-          rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-          className="text-base leading-[1.45] text-secondary-ink underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
-        >
-          {link.title}
-        </a>
-      ))}
+    <section className="flex flex-col gap-8 py-4">
+      <h1 className="font-display text-xl leading-[1.2] text-foreground">Texts</h1>
+      <div className="flex flex-col gap-1 pl-2 text-base leading-[1.45] text-foreground/75">
+        {links.map((link) => (
+          <a
+            key={link.id}
+            href={link.url}
+            target={link.url.startsWith('http') ? '_blank' : undefined}
+            rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+            className="underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+          >
+            {link.title}
+          </a>
+        ))}
+      </div>
     </section>
   )
 }
