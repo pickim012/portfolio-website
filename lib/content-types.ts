@@ -111,6 +111,7 @@ export type SiteContent = {
   exhibitions: PublicExhibition[]
   paintingsByYear: Record<string, PublicPainting[]>
   paintingYears: string[]
+  cvIntro: string
   cv: { id: string; label: string; content: string }[]
   cvLinks: CvLink[]
   contacts: PublicContact[]

@@ -84,15 +84,22 @@ function Paintings({
 }
 
 function CV({
+  cvIntro,
   cv,
   cvLinks,
 }: {
+  cvIntro: SiteContent['cvIntro']
   cv: SiteContent['cv']
   cvLinks: SiteContent['cvLinks']
 }) {
   return (
     <section className="flex flex-col gap-8 py-4">
       <h1 className="font-display text-xl leading-[1.2] text-foreground">CV</h1>
+      {cvIntro.trim() && (
+        <p className="-mt-4 whitespace-pre-line text-base leading-[1.45] text-foreground/75">
+          {cvIntro}
+        </p>
+      )}
       {cv.map((section) => (
         <div key={section.id} className="flex flex-col gap-1">
           <h2 className="text-base leading-[1.2] text-secondary-ink">{section.label === 'Group Exhibitions' ? 'Selected Group Exhibitions' : section.label}</h2>
@@ -161,7 +168,7 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
     case 'paintings':
       return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} />
     case 'cv':
-      return <CV cv={content.cv} cvLinks={content.cvLinks} />
+      return <CV cvIntro={content.cvIntro} cv={content.cv} cvLinks={content.cvLinks} />
     case 'contacts':
       return <Contacts contacts={content.contacts} />
   }

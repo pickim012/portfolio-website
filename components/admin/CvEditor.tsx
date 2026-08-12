@@ -7,7 +7,7 @@ import { saveCv } from "@/app/admin/(dashboard)/actions"
 import type { CvLink, CvSection } from "@/lib/content-types"
 import { Btn, TextArea, TextInput, Toggle } from "./ui"
 
-type CvInitial = { sections: CvSection[]; links: CvLink[] }
+type CvInitial = { intro: string; sections: CvSection[]; links: CvLink[] }
 
 function makeLinkId() {
   return `link-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
@@ -15,6 +15,7 @@ function makeLinkId() {
 
 export function CvEditor({ initial }: { initial: CvInitial }) {
   const router = useRouter()
+  const [intro, setIntro] = useState(initial.intro)
   const [sections, setSections] = useState<CvSection[]>(initial.sections)
   const [links, setLinks] = useState<CvLink[]>(initial.links)
   const [pending, startTransition] = useTransition()
@@ -54,7 +55,7 @@ export function CvEditor({ initial }: { initial: CvInitial }) {
   function handleSave() {
     setSaved(false)
     startTransition(async () => {
-      await saveCv(sections, links)
+      await saveCv(intro, sections, links)
       router.refresh()
       setSaved(true)
     })
@@ -65,6 +66,20 @@ export function CvEditor({ initial }: { initial: CvInitial }) {
 
   return (
     <div className="mt-8 flex max-w-2xl flex-col gap-6">
+      <div className="rounded-xl border border-neutral-200 bg-white p-5">
+        <span className="text-sm font-semibold text-neutral-900">Short Bio</span>
+        <TextArea
+          className="mt-3"
+          rows={4}
+          value={intro}
+          onChange={(e) => {
+            setIntro(e.target.value)
+            setSaved(false)
+          }}
+          placeholder="A brief introduction to the artist."
+        />
+      </div>
+
       {fixed.map((section) => (
         <div key={section.id} className="rounded-xl border border-neutral-200 bg-white p-5">
           <div className="flex items-center justify-between">

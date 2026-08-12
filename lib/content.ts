@@ -118,6 +118,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     exhibitions: publishedExhibitions,
     paintingsByYear,
     paintingYears,
+    cvIntro: cvRows[0]?.intro ?? '',
     cv,
     cvLinks,
     contacts,
@@ -169,9 +170,10 @@ export async function getPaintingsForAdmin(): Promise<AdminPainting[]> {
   }))
 }
 
-export async function getCvForAdmin(): Promise<{ sections: CvSection[]; links: CvLink[] }> {
+export async function getCvForAdmin(): Promise<{ intro: string; sections: CvSection[]; links: CvLink[] }> {
   const rows = await db.select().from(cvContent).limit(1)
   return {
+    intro: rows[0]?.intro ?? '',
     sections: (rows[0]?.sections as CvSection[] | undefined) ?? defaultCvSections(),
     links: (rows[0]?.links as CvLink[] | undefined) ?? [],
   }
