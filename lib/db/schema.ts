@@ -59,3 +59,10 @@ export const contactsContent = pgTable('contacts_content', {
   fields: jsonb('fields').notNull().default([]),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
+
+// Texts: single row holding an ordered array of external text links.
+export const textsContent = pgTable('texts_content', {
+  id: integer('id').primaryKey().default(1),
+  links: jsonb('links').notNull().default([]),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+})

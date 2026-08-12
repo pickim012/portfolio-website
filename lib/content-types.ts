@@ -108,6 +108,7 @@ export type PublicContact = {
 }
 
 export type SiteContent = {
+  textsLinks: CvLink[]
   home: { imageSrc: string; body: string }
   exhibitions: PublicExhibition[]
   paintingsByYear: Record<string, PublicPainting[]>
@@ -155,6 +156,10 @@ export type AdminPainting = {
   details: string
   images: string[]
   sortOrder: number
+}
+
+export type TextsContent = {
+  links: CvLink[]
 }
 
 export type PaintingInput = {

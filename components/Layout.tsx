@@ -62,6 +62,24 @@ function Exhibitions({
   )
 }
 
+function Texts({ links }: { links: SiteContent['textsLinks'] }) {
+  return (
+    <section className="flex flex-col gap-4 py-4">
+      {links.map((link) => (
+        <a
+          key={link.id}
+          href={link.url}
+          target={link.url.startsWith('http') ? '_blank' : undefined}
+          rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+          className="text-base leading-[1.45] text-secondary-ink underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+        >
+          {link.title}
+        </a>
+      ))}
+    </section>
+  )
+}
+
 function Paintings({
   year,
   paintingsByYear,
@@ -167,6 +185,8 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
       return <Exhibitions kind={route.kind} items={content.exhibitions} />
     case 'paintings':
       return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} />
+    case 'texts':
+      return <Texts links={content.textsLinks} />
     case 'cv':
       return <CV cvIntro={content.cvIntro} cv={content.cv} cvLinks={content.cvLinks} />
     case 'contacts':
@@ -210,6 +230,7 @@ export function Layout({ content }: { content: SiteContent }) {
         route={route}
         onNavigate={handleNavigate}
         paintingYears={content.paintingYears}
+        hasTexts={content.textsLinks.length > 0}
         isHome={route.view === 'home'}
       />
       {route.view !== 'home' && (
@@ -228,6 +249,7 @@ export function Layout({ content }: { content: SiteContent }) {
               route={route}
               onNavigate={handleNavigate}
               paintingYears={content.paintingYears}
+              hasTexts={content.textsLinks.length > 0}
               isHome={route.view === 'home'}
             />
           </div>

@@ -10,6 +10,7 @@ type SidebarProps = {
   route: Route
   onNavigate: (route: Route) => void
   paintingYears: string[]
+  hasTexts?: boolean
   isHome?: boolean
   showIdentity?: boolean
   showHomeItem?: boolean
@@ -86,6 +87,7 @@ export function SidebarMenu({
   route,
   onNavigate,
   paintingYears,
+  hasTexts = false,
   isHome = false,
   showIdentity = true,
   showHomeItem = false,
@@ -99,7 +101,7 @@ export function SidebarMenu({
   // Independent toggle state: each submenu opens/closes on its own,
   // and opening one never collapses the others.
   const [worksExpanded, setWorksExpanded] = useState(
-    route.view === 'exhibitions' || route.view === 'paintings',
+    route.view === 'exhibitions' || route.view === 'paintings' || route.view === 'texts',
   )
   const [aboutExpanded, setAboutExpanded] = useState(
     route.view === 'cv' || route.view === 'contacts',
@@ -116,6 +118,9 @@ export function SidebarMenu({
     } else if (route.view === 'paintings') {
       setWorksExpanded(true)
       setPaintingsExpanded(true)
+    } else if (route.view === 'texts') {
+      setWorksExpanded(true)
+      setTextsExpanded(true)
     } else if (route.view === 'cv' || route.view === 'contacts') {
       setAboutExpanded(true)
     }
@@ -203,6 +208,14 @@ export function SidebarMenu({
                 ))}
               </Collapse>
             </motion.div>
+            {hasTexts && (
+              <MenuItem
+                label="Texts"
+                indent={1}
+                active={route.view === 'texts'}
+                onClick={() => onNavigate({ view: 'texts' })}
+              />
+            )}
           </Collapse>
         </motion.div>
 
@@ -229,7 +242,7 @@ export function SidebarMenu({
   )
 }
 
-export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }: SidebarProps) {
+export function MobileMenu({ route, onNavigate, paintingYears, hasTexts = false, isHome = false }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   // Close the mobile drawer whenever navigation completes.
@@ -292,6 +305,7 @@ export function MobileMenu({ route, onNavigate, paintingYears, isHome = false }:
                 route={route}
                 onNavigate={handleNavigate}
                 paintingYears={paintingYears}
+                hasTexts={hasTexts}
                 isHome={false}
                 showIdentity={false}
                 showHomeItem

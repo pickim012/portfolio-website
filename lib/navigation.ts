@@ -4,6 +4,7 @@ export type Route =
   | { view: 'home' }
   | { view: 'exhibitions'; kind: ExhibitionKind }
   | { view: 'paintings'; year: string }
+  | { view: 'texts' }
   | { view: 'cv' }
   | { view: 'contacts' }
 
@@ -28,6 +29,8 @@ export function breadcrumb(route: Route): string[] {
       return ['Works', 'Exhibitions', route.kind === 'solo' ? 'Solo' : 'Group']
     case 'paintings':
       return ['Works', 'Paintings', route.year]
+    case 'texts':
+      return ['Works', 'Texts']
     case 'cv':
       return ['About', 'CV']
     case 'contacts':

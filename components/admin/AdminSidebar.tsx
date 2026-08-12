@@ -15,6 +15,7 @@ const NAV: NavItem[] = [
     children: [
       { label: "Exhibitions", href: "/admin/exhibitions" },
       { label: "Paintings", href: "/admin/paintings" },
+      { label: "Texts", href: "/admin/texts" },
     ],
   },
   {

@@ -9,6 +9,7 @@ import {
   exhibitions,
   homeContent,
   paintings,
+  textsContent,
 } from '@/lib/db/schema'
 import type {
   ContactField,
@@ -188,6 +189,18 @@ export async function saveContacts(fields: ContactField[]) {
     .onConflictDoUpdate({
       target: contactsContent.id,
       set: { fields, updatedAt: new Date() },
+    })
+  revalidateAll()
+}
+
+export async function saveTexts(links: CvLink[]) {
+  await assertAdmin()
+  await db
+    .insert(textsContent)
+    .values({ id: 1, links, updatedAt: new Date() })
+    .onConflictDoUpdate({
+      target: textsContent.id,
+      set: { links, updatedAt: new Date() },
     })
   revalidateAll()
 }

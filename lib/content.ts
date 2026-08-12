@@ -6,6 +6,7 @@ import {
   exhibitions,
   homeContent,
   paintings,
+  textsContent,
 } from '@/lib/db/schema'
 import {
   type AdminExhibition,
@@ -49,7 +50,7 @@ function contactHref(id: string, value: string): string | undefined {
 // Front-end read: assembles the entire published site from the database.
 // ---------------------------------------------------------------------------
 export async function getSiteContent(): Promise<SiteContent> {
-  const [homeRows, exhibitionRows, paintingRows, cvRows, contactRows] =
+  const [homeRows, exhibitionRows, paintingRows, cvRows, contactRows, textsRows] =
     await Promise.all([
       db.select().from(homeContent).limit(1),
       db.select().from(exhibitions).orderBy(asc(exhibitions.sortOrder), asc(exhibitions.createdAt)),
@@ -59,11 +60,16 @@ export async function getSiteContent(): Promise<SiteContent> {
         .orderBy(desc(paintings.year), asc(paintings.sortOrder), asc(paintings.createdAt)),
       db.select().from(cvContent).limit(1),
       db.select().from(contactsContent).limit(1),
+      db.select().from(textsContent).limit(1),
     ])
 
   const home = homeRows[0]
     ? { imageSrc: homeRows[0].imageUrl, body: homeRows[0].body }
     : { imageSrc: '', body: '' }
+
+  const textsLinks = ((textsRows[0]?.links as CvLink[] | undefined) ?? [])
+    .filter((l) => l.title.trim() !== '' && l.url.trim() !== '')
+    .map((l) => ({ id: l.id, title: l.title.trim(), url: l.url.trim() }))
 
   const publishedExhibitions: PublicExhibition[] = exhibitionRows
     .filter((e) => e.published)
@@ -117,6 +123,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     }))
 
   return {
+    textsLinks,
     home,
     exhibitions: publishedExhibitions,
     paintingsByYear,
@@ -186,4 +193,9 @@ export async function getCvForAdmin(): Promise<{ intro: string; sections: CvSect
 export async function getContactsForAdmin(): Promise<ContactField[]> {
   const rows = await db.select().from(contactsContent).limit(1)
   return (rows[0]?.fields as ContactField[] | undefined) ?? defaultContactFields()
+}
+
+export async function getTextsForAdmin(): Promise<CvLink[]> {
+  const rows = await db.select().from(textsContent).limit(1)
+  return (rows[0]?.links as CvLink[] | undefined) ?? []
 }
