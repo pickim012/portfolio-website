@@ -89,6 +89,7 @@ export type PublicExhibition = {
   address: string
   images: string[]
   about: string
+  links: CvLink[]
 }
 
 export type PublicPainting = {
@@ -129,6 +130,7 @@ export type AdminExhibition = {
   address: string
   images: string[]
   about: string
+  links: CvLink[]
   published: boolean
   sortOrder: number
 }
@@ -141,6 +143,7 @@ export type ExhibitionInput = {
   address: string
   images: string[]
   about: string
+  links: CvLink[]
   published: boolean
 }
 

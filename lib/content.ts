@@ -76,6 +76,9 @@ export async function getSiteContent(): Promise<SiteContent> {
       address: e.address,
       images: toStringArray(e.images),
       about: e.about ?? '',
+      links: ((e.links as CvLink[] | undefined) ?? [])
+        .filter((l) => l.title.trim() !== '' && l.url.trim() !== '')
+        .map((l) => ({ id: l.id, title: l.title.trim(), url: l.url.trim() })),
     }))
 
   const paintingsByYear: Record<string, PublicPainting[]> = {}
@@ -149,6 +152,7 @@ export async function getExhibitionsForAdmin(): Promise<AdminExhibition[]> {
     address: e.address,
     images: toStringArray(e.images),
     about: e.about ?? '',
+    links: (e.links as CvLink[] | undefined) ?? [],
     published: e.published,
     sortOrder: e.sortOrder,
   }))

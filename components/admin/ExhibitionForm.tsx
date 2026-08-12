@@ -2,12 +2,13 @@
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
+import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react"
 import {
   createExhibition,
   deleteExhibition,
   updateExhibition,
 } from "@/app/admin/(dashboard)/actions"
-import type { AdminExhibition } from "@/lib/content-types"
+import type { AdminExhibition, CvLink } from "@/lib/content-types"
 import { Btn, Field, Segmented, TextArea, TextInput, Toggle } from "./ui"
 import { ImageUrlList, makeImageItems, type ImageItem } from "./ImageUrlList"
 
@@ -29,6 +30,7 @@ export function ExhibitionForm({
   const [address, setAddress] = useState(item?.address ?? "")
   const [images, setImages] = useState<ImageItem[]>(makeImageItems(item?.images ?? []))
   const [about, setAbout] = useState(item?.about ?? "")
+  const [links, setLinks] = useState<CvLink[]>(item?.links ?? [])
   const [published, setPublished] = useState(item?.published ?? true)
   const [pending, startTransition] = useTransition()
 
@@ -42,6 +44,7 @@ export function ExhibitionForm({
       images: images.map((i) => i.url.trim()).filter(Boolean),
       // Preserve line breaks and spacing exactly as typed (no trim).
       about,
+      links,
       published,
     }
   }
@@ -55,6 +58,20 @@ export function ExhibitionForm({
       }
       router.refresh()
       onDone()
+    })
+  }
+
+  function updateLink(id: string, patch: Partial<CvLink>) {
+    setLinks((current) => current.map((link) => (link.id === id ? { ...link, ...patch } : link)))
+  }
+
+  function moveLink(index: number, direction: -1 | 1) {
+    setLinks((current) => {
+      const next = [...current]
+      const target = index + direction
+      if (target < 0 || target >= next.length) return current
+      ;[next[index], next[target]] = [next[target], next[index]]
+      return next
     })
   }
 
@@ -125,6 +142,44 @@ export function ExhibitionForm({
           rows={5}
         />
       </Field>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-neutral-800">Links</span>
+        <span className="text-xs text-neutral-500">Shown at the bottom of the exhibition entry.</span>
+        {links.map((link, i) => (
+          <div key={link.id} className="flex items-start gap-3 rounded-xl border border-neutral-200 bg-white p-4">
+            <div className="flex flex-1 flex-col gap-2">
+              <TextInput
+                value={link.title}
+                onChange={(e) => updateLink(link.id, { title: e.target.value })}
+                placeholder="Link title"
+              />
+              <TextInput
+                value={link.url}
+                onChange={(e) => updateLink(link.id, { url: e.target.value })}
+                placeholder="https://example.com"
+              />
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <button type="button" aria-label="Move link up" onClick={() => moveLink(i, -1)} disabled={i === 0} className="rounded-md p-1 text-neutral-500 transition-colors hover:bg-neutral-100 disabled:opacity-30">
+                <ArrowUp className="h-4 w-4" strokeWidth={1.5} />
+              </button>
+              <button type="button" aria-label="Move link down" onClick={() => moveLink(i, 1)} disabled={i === links.length - 1} className="rounded-md p-1 text-neutral-500 transition-colors hover:bg-neutral-100 disabled:opacity-30">
+                <ArrowDown className="h-4 w-4" strokeWidth={1.5} />
+              </button>
+              <button type="button" aria-label="Remove link" onClick={() => setLinks((current) => current.filter((item) => item.id !== link.id))} className="rounded-md p-1 text-red-500 transition-colors hover:bg-red-50">
+                <Trash2 className="h-4 w-4" strokeWidth={1.5} />
+              </button>
+            </div>
+          </div>
+        ))}
+        <div>
+          <Btn variant="secondary" onClick={() => setLinks((current) => [...current, { id: crypto.randomUUID(), title: "", url: "" }])} className="gap-2">
+            <Plus className="h-4 w-4" strokeWidth={1.5} />
+            Add Link
+          </Btn>
+        </div>
+      </div>
 
       <Field label="Status">
         <div>

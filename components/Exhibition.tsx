@@ -33,6 +33,24 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
           {exhibition.about}
         </p>
       )}
+
+      {exhibition.links.length > 0 && (
+        <div className="mt-8 flex w-full justify-end text-right text-base leading-[1.45] text-secondary-ink">
+          {exhibition.links.map((link, index) => (
+            <span key={link.id}>
+              <a
+                href={link.url}
+                target={link.url.startsWith('http') ? '_blank' : undefined}
+                rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                className="underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+              >
+                {link.title}
+              </a>
+              {index < exhibition.links.length - 1 ? ', ' : ''}
+            </span>
+          ))}
+        </div>
+      )}
     </article>
   )
 }

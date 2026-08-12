@@ -26,6 +26,7 @@ export const exhibitions = pgTable('exhibitions', {
   address: text('address').notNull().default(''),
   images: jsonb('images').notNull().default([]), // string[] of image URLs
   about: text('about'), // optional short description shown below images (nullable)
+  links: jsonb('links').notNull().default([]), // ordered exhibition links
   published: boolean('published').notNull().default(true),
   sortOrder: integer('sort_order').notNull().default(0), // ascending; smallest = top
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
