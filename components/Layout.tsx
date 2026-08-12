@@ -104,17 +104,19 @@ function CV({
       {cvLinks.length > 0 && (
         <div className="flex flex-col gap-1">
           <h2 className="text-base leading-[1.2] text-secondary-ink">Links</h2>
-          <div className="flex flex-col gap-1 pl-2">
-            {cvLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                target={link.url.startsWith('http') ? '_blank' : undefined}
-                rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="text-base leading-[1.45] text-foreground/75 underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
-              >
-                {link.title}
-              </a>
+          <div className="flex flex-wrap items-center gap-x-1 pl-2 text-base leading-[1.45] text-foreground/75">
+            {cvLinks.map((link, index) => (
+              <span key={link.id}>
+                <a
+                  href={link.url}
+                  target={link.url.startsWith('http') ? '_blank' : undefined}
+                  rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+                >
+                  {link.title}
+                </a>
+                {index < cvLinks.length - 1 ? ', ' : ''}
+              </span>
             ))}
           </div>
         </div>
