@@ -120,7 +120,6 @@ export function SidebarMenu({
       setPaintingsExpanded(true)
     } else if (route.view === 'texts') {
       setWorksExpanded(true)
-      setTextsExpanded(true)
     } else if (route.view === 'cv' || route.view === 'contacts') {
       setAboutExpanded(true)
     }
