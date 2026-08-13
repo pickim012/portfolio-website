@@ -48,7 +48,7 @@ function Exhibitions({
 }) {
   const shown = items.filter((exhibition) => exhibition.kind === kind)
   return (
-    <section className="flex flex-col gap-20 py-4">
+    <section className="flex flex-col gap-40 py-4">
       {shown.length === 0 ? (
         <p className="text-center text-base text-secondary-ink">
           No {kind} exhibitions yet.
