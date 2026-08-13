@@ -29,7 +29,7 @@ function Home({ home }: { home: SiteContent['home'] }) {
         {paragraphs.map((line, i) => (
           <p
             key={i}
-            className="whitespace-pre-line text-base leading-[1.45] text-secondary-ink text-pretty"
+            className="whitespace-pre-line text-sm leading-[1.45] text-secondary-ink text-pretty"
           >
             {line}
           </p>
