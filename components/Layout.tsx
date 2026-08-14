@@ -22,7 +22,7 @@ function Home({ home }: { home: SiteContent['home'] }) {
           height={800}
           priority
           sizes="(max-width: 768px) 100vw, 800px"
-          className="h-auto w-full"
+          className="h-auto max-h-[calc(100svh-10rem)] w-full object-contain object-left-top"
         />
       ) : null}
       <div className="flex flex-col items-end gap-4 text-right">
