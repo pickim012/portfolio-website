@@ -21,7 +21,7 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
   }, [])
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background text-center">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black text-center">
       <Image
         src={home.imageSrc || '/placeholder.svg'}
         alt=""
@@ -231,7 +231,7 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
 function Content({ route, content }: { route: Route; content: SiteContent }) {
   switch (route.view) {
     case 'home':
-      return <Home home={content.home} />
+      return null
     case 'exhibitions':
       return <Exhibitions kind={route.kind} items={content.exhibitions} />
     case 'paintings':
@@ -275,7 +275,7 @@ export function Layout({ content }: { content: SiteContent }) {
       window.removeEventListener('site:return-landing', returnToLanding)
       if (homeLeaveTimer.current !== null) window.clearTimeout(homeLeaveTimer.current)
     }
-  }, [homeLeaving, route])
+  }, [])
 
   const handleNavigate = (next: Route) => {
     if (routeKey(next) === routeKey(route) || homeLeaving) return
@@ -300,7 +300,7 @@ export function Layout({ content }: { content: SiteContent }) {
   }
 
   return (
-    <div className={`min-h-screen bg-background transition-opacity duration-[350ms] ease-out ${homeLeaving ? 'opacity-0' : 'opacity-100'}`}>
+    <div className="min-h-screen bg-background">
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
