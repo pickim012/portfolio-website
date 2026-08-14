@@ -4,11 +4,41 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
 import { SidebarMenu, MobileMenu } from './Sidebar'
+import { ARTIST_NAME } from '@/lib/site-config'
 import { Navigator } from './Navigator'
 import { Exhibition } from './Exhibition'
 import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
+
+function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onEnter}
+      aria-label={`Enter ${ARTIST_NAME.first} ${ARTIST_NAME.last}'s website`}
+      className="group relative flex min-h-screen w-full cursor-pointer items-center justify-center overflow-hidden bg-black text-center"
+    >
+      <Image
+        src={home.imageSrc || '/placeholder.svg'}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center"
+      />
+      <span className="pointer-events-none absolute inset-0 bg-white opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <span className="relative z-10 font-display text-3xl leading-[1.15] text-white md:text-5xl">
+        {ARTIST_NAME.first} {ARTIST_NAME.last}
+      </span>
+      {home.body.trim() && (
+        <span className="absolute bottom-6 right-6 z-10 max-w-[min(28rem,calc(100%-3rem))] text-right text-sm leading-[1.45] text-white">
+          {home.body}
+        </span>
+      )}
+    </button>
+  )
+}
 
 function Home({ home }: { home: SiteContent['home'] }) {
   const paragraphs = home.body.split(/\n{2,}/).filter((p) => p.trim() !== '')
@@ -183,7 +213,7 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
 function Content({ route, content }: { route: Route; content: SiteContent }) {
   switch (route.view) {
     case 'home':
-      return <Home home={content.home} />
+      return null
     case 'exhibitions':
       return <Exhibitions kind={route.kind} items={content.exhibitions} />
     case 'paintings':
@@ -199,6 +229,7 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
 
 export function Layout({ content }: { content: SiteContent }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
+  const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
   const homeLeaveTimer = useRef<number | null>(null)
 
@@ -224,6 +255,10 @@ export function Layout({ content }: { content: SiteContent }) {
 
     // Keep other outgoing pages at their current position; scroll resets after exit.
     setRoute(next)
+  }
+
+  if (!hasEnteredSite) {
+    return <LandingScreen home={content.home} onEnter={() => setHasEnteredSite(true)} />
   }
 
   return (
