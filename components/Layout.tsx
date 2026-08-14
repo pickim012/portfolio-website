@@ -14,7 +14,7 @@ function Home({ home }: { home: SiteContent['home'] }) {
   const paragraphs = home.body.split(/\n{2,}/).filter((p) => p.trim() !== '')
   return (
     <section className="flex flex-col gap-3 py-4">
-      <figure className="flex w-full flex-col gap-3">
+      <figure className="flex w-fit max-w-full flex-col gap-3">
         {home.imageSrc ? (
           <Image
             src={home.imageSrc || '/placeholder.svg'}
@@ -23,7 +23,7 @@ function Home({ home }: { home: SiteContent['home'] }) {
             height={800}
             priority
             sizes="(max-width: 768px) 100vw, 800px"
-            className="h-auto max-h-[calc(100svh-10rem)] w-full object-contain object-left-top"
+            className="h-auto max-h-[calc(100svh-10rem)] w-auto max-w-full object-contain object-left-top"
           />
         ) : null}
         <figcaption className="flex w-full flex-col items-end gap-4 text-right">
