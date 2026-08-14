@@ -12,6 +12,8 @@ import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
 function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
+  const [isZoneHovered, setIsZoneHovered] = useState(false)
+
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black text-center">
       <Image
@@ -22,13 +24,18 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         sizes="100vw"
         className="object-cover object-center"
       />
+      <span
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.25)] transition-opacity duration-300 ${isZoneHovered ? 'opacity-100' : 'opacity-0'}`}
+      />
       <button
         type="button"
         onClick={onEnter}
+        onMouseEnter={() => setIsZoneHovered(true)}
+        onMouseLeave={() => setIsZoneHovered(false)}
         aria-label={`Enter ${ARTIST_NAME.first} ${ARTIST_NAME.last}'s website`}
-        className="group absolute left-1/2 top-1/2 flex h-[40vh] w-[40vw] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center text-center"
+        className="absolute left-1/2 top-1/2 flex h-[40vh] w-[40vw] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center text-center"
       >
-        <span className="pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.25)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <span className="relative z-10 font-display text-3xl leading-[1.15] text-white md:text-5xl">
           {ARTIST_NAME.first} {ARTIST_NAME.last}
         </span>
