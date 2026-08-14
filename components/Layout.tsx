@@ -25,8 +25,9 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center transition-opacity duration-300 group-hover:opacity-90"
+        className="object-cover object-center"
       />
+      <span className="pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.25)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <span className="relative z-10 font-display text-3xl leading-[1.15] text-white md:text-5xl">
         {ARTIST_NAME.first} {ARTIST_NAME.last}
       </span>
