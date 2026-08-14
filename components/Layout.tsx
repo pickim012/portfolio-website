@@ -332,13 +332,19 @@ export function Layout({ content }: { content: SiteContent }) {
         {/* Column 1 — Sidebar */}
         <aside className="hidden md:block">
           <div className="sticky top-[60px]">
-            <SidebarMenu
-              route={route}
-              onNavigate={handleNavigate}
-              paintingYears={content.paintingYears}
-              hasTexts={content.textsLinks.length > 0}
-              isHome={route.view === 'home'}
-            />
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <SidebarMenu
+                route={route}
+                onNavigate={handleNavigate}
+                paintingYears={content.paintingYears}
+                hasTexts={content.textsLinks.length > 0}
+                isHome={route.view === 'home'}
+              />
+            </motion.div>
           </div>
         </aside>
 
