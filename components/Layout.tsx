@@ -14,18 +14,19 @@ function Home({ home }: { home: SiteContent['home'] }) {
   const paragraphs = home.body.split(/\n{2,}/).filter((p) => p.trim() !== '')
   return (
     <section className="flex flex-col gap-3 py-4">
-      {home.imageSrc ? (
-        <Image
-          src={home.imageSrc || '/placeholder.svg'}
-          alt="Featured painting"
-          width={1200}
-          height={800}
-          priority
-          sizes="(max-width: 768px) 100vw, 800px"
-          className="h-auto max-h-[calc(100svh-10rem)] w-full object-contain object-left-top"
-        />
-      ) : null}
-      <div className="flex flex-col items-end gap-4 text-right">
+      <figure className="flex w-full flex-col gap-3">
+        {home.imageSrc ? (
+          <Image
+            src={home.imageSrc || '/placeholder.svg'}
+            alt="Featured painting"
+            width={1200}
+            height={800}
+            priority
+            sizes="(max-width: 768px) 100vw, 800px"
+            className="h-auto max-h-[calc(100svh-10rem)] w-full object-contain object-left-top"
+          />
+        ) : null}
+        <figcaption className="flex w-full flex-col items-end gap-4 text-right">
         {paragraphs.map((line, i) => (
           <p
             key={i}
@@ -34,7 +35,8 @@ function Home({ home }: { home: SiteContent['home'] }) {
             {line}
           </p>
         ))}
-      </div>
+        </figcaption>
+      </figure>
     </section>
   )
 }
