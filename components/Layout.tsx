@@ -240,7 +240,15 @@ export function Layout({ content }: { content: SiteContent }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
   const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
+  const [showBackToTop, setShowBackToTop] = useState(false)
   const homeLeaveTimer = useRef<number | null>(null)
+
+  useEffect(() => {
+    const updateBackToTop = () => setShowBackToTop(window.scrollY > 320)
+    updateBackToTop()
+    window.addEventListener('scroll', updateBackToTop, { passive: true })
+    return () => window.removeEventListener('scroll', updateBackToTop)
+  }, [])
 
   useEffect(() => {
     const returnToLanding = () => {
@@ -281,6 +289,17 @@ export function Layout({ content }: { content: SiteContent }) {
 
   return (
     <div className="min-h-screen bg-background">
+      <button
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+        aria-label="Back to top"
+        aria-hidden={!showBackToTop}
+        tabIndex={showBackToTop ? 0 : -1}
+        className={`fixed bottom-6 right-6 z-40 text-lg leading-none text-foreground/40 transition-[opacity,color] duration-300 hover:text-hover-ink ${showBackToTop ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+      >
+        ↑
+      </button>
+
       {/* Mobile-only chrome */}
       <MobileMenu
         route={route}
