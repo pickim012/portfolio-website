@@ -19,7 +19,7 @@ function LandingBackdrop({ home }: { home: SiteContent['home'] }) {
         alt=""
         fill
         sizes="100vw"
-        className="object-cover object-center"
+        className="object-cover object-center blur-[1.5px]"
       />
       <span className="absolute inset-0 bg-[rgba(255,255,255,0.25)]" />
     </div>
