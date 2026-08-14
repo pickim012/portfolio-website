@@ -132,7 +132,7 @@ export function SidebarMenu({
         <button
           type="button"
           onClick={() => window.dispatchEvent(new CustomEvent('site:return-landing'))}
-          className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200"
+          className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200 hover:text-secondary-ink"
         >
           {ARTIST_NAME.first}
           <br />

@@ -253,10 +253,13 @@ export function Layout({ content }: { content: SiteContent }) {
   useEffect(() => {
     const returnToLanding = () => {
       if (homeLeaveTimer.current !== null) window.clearTimeout(homeLeaveTimer.current)
-      setHomeLeaving(false)
-      setRoute({ view: 'home' })
-      setHasEnteredSite(false)
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      setHomeLeaving(true)
+      homeLeaveTimer.current = window.setTimeout(() => {
+        setRoute({ view: 'home' })
+        setHasEnteredSite(false)
+        setHomeLeaving(false)
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      }, 350)
     }
     window.addEventListener('site:return-landing', returnToLanding)
     return () => {
