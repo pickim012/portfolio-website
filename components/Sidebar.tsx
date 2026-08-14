@@ -14,7 +14,6 @@ type SidebarProps = {
   isHome?: boolean
   showIdentity?: boolean
   showHomeItem?: boolean
-  centered?: boolean
 }
 
 // Shared easing/duration used by both the height collapse and the sibling
@@ -92,7 +91,6 @@ export function SidebarMenu({
   isHome = false,
   showIdentity = true,
   showHomeItem = false,
-  centered = false,
 }: SidebarProps) {
   const [homeMenuExpanded, setHomeMenuExpanded] = useState(true)
 
@@ -128,7 +126,7 @@ export function SidebarMenu({
   }, [route])
 
   return (
-    <div className={`flex flex-col gap-10 ${centered ? 'w-max' : ''}`}>
+    <div className="flex flex-col gap-10">
       {/* Artist name → Home */}
       {showIdentity && (
         <button

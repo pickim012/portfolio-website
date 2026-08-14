@@ -330,8 +330,8 @@ export function Layout({ content }: { content: SiteContent }) {
       {/* True three-column grid: | Sidebar | Content | Navigator | */}
       <div className={`mx-auto grid max-w-[1440px] grid-cols-1 px-5 pb-32 pt-24 md:px-10 md:pt-[60px] ${route.view === 'home' ? 'md:grid-cols-[170px_minmax(0,1fr)] md:gap-x-10' : 'md:grid-cols-[170px_minmax(0,1fr)_140px] md:justify-center md:gap-x-10 lg:gap-x-16'}`}>
         {/* Column 1 — Sidebar */}
-        <aside className={`hidden md:block ${route.view === 'home' ? 'md:fixed md:left-1/2 md:top-1/2 md:z-20 md:-translate-x-1/2 md:-translate-y-1/2' : ''}`}>
-          <div className={route.view === 'home' ? '' : 'sticky top-[60px]'}>
+        <aside className="hidden md:block">
+          <div className="sticky top-[60px]">
             <motion.div
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
@@ -343,7 +343,6 @@ export function Layout({ content }: { content: SiteContent }) {
                 paintingYears={content.paintingYears}
                 hasTexts={content.textsLinks.length > 0}
                 isHome={route.view === 'home'}
-                centered={route.view === 'home'}
               />
             </motion.div>
           </div>
