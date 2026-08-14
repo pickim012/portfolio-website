@@ -11,6 +11,21 @@ import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
+function LandingBackdrop({ home }: { home: SiteContent['home'] }) {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-background" aria-hidden="true">
+      <Image
+        src={home.imageSrc || '/placeholder.svg'}
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover object-center"
+      />
+      <span className="absolute inset-0 bg-[rgba(255,255,255,0.25)]" />
+    </div>
+  )
+}
+
 function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -300,7 +315,9 @@ export function Layout({ content }: { content: SiteContent }) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
+      {route.view === 'home' && <LandingBackdrop home={content.home} />}
+      <div className="relative z-10">
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
@@ -377,6 +394,7 @@ export function Layout({ content }: { content: SiteContent }) {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   )
