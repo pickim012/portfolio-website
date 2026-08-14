@@ -146,7 +146,7 @@ export function SidebarMenu({
           on their static wrappers, which stay mounted and never snap. */}
       <Collapse open={!isHome || homeMenuExpanded} innerClassName="flex flex-col gap-4 text-base">
         {showHomeItem && (
-          <MenuItem label="Home" active={route.view === 'home'} onClick={() => onNavigate({ view: 'home' })} />
+          <MenuItem label="Home" active={false} onClick={() => window.dispatchEvent(new CustomEvent('site:return-landing'))} />
         )}
         {/* Works */}
         <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
