@@ -16,15 +16,22 @@ function Home({ home }: { home: SiteContent['home'] }) {
     <section className="flex flex-col gap-3 py-4">
       <figure className="flex w-fit max-w-full flex-col gap-3">
         {home.imageSrc ? (
-          <Image
-            src={home.imageSrc || '/placeholder.svg'}
-            alt="Featured painting"
-            width={1200}
-            height={800}
-            priority
-            sizes="(max-width: 768px) 100vw, 800px"
-            className="h-auto max-h-[calc(100svh-10rem)] w-auto max-w-full object-contain object-left-top"
-          />
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('site:toggle-home-menu'))}
+            aria-label="Open menu"
+            className="block w-fit max-w-full cursor-pointer text-left"
+          >
+            <Image
+              src={home.imageSrc || '/placeholder.svg'}
+              alt="Featured painting"
+              width={1200}
+              height={800}
+              priority
+              sizes="(max-width: 768px) 100vw, 800px"
+              className="h-auto max-h-[calc(100svh-10rem)] w-auto max-w-full object-contain object-left-top transition-opacity duration-200 hover:opacity-90"
+            />
+          </button>
         ) : null}
         <figcaption className="flex w-full flex-col items-end gap-4 text-right">
         {paragraphs.map((line, i) => (

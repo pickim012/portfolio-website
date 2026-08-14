@@ -95,6 +95,14 @@ export function SidebarMenu({
   const [homeMenuExpanded, setHomeMenuExpanded] = useState(!isHome)
 
   useEffect(() => {
+    const handleImageMenuToggle = () => {
+      if (isHome) setHomeMenuExpanded((value) => !value)
+    }
+    window.addEventListener('site:toggle-home-menu', handleImageMenuToggle)
+    return () => window.removeEventListener('site:toggle-home-menu', handleImageMenuToggle)
+  }, [isHome])
+
+  useEffect(() => {
     setHomeMenuExpanded(!isHome)
   }, [isHome])
 
