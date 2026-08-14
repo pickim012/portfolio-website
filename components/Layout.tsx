@@ -244,16 +244,16 @@ export function Layout({ content }: { content: SiteContent }) {
 
   return (
     <div className="min-h-screen bg-background">
-      {showBackToTop && (
-        <button
-          type="button"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          aria-label="Back to top"
-          className="fixed bottom-6 right-6 z-40 rounded-md p-2 text-secondary-ink transition-colors duration-200 hover:text-hover-ink"
-        >
-          <ArrowUp className="h-4 w-4" strokeWidth={1.5} />
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Back to top"
+        aria-hidden={!showBackToTop}
+        tabIndex={showBackToTop ? 0 : -1}
+        className={`fixed bottom-6 right-6 z-40 rounded-md p-2 text-foreground/45 transition-[opacity,color] duration-300 hover:text-hover-ink ${showBackToTop ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+      >
+        <ArrowUp className="h-4 w-4" strokeWidth={1.5} />
+      </button>
 
       {/* Mobile-only chrome */}
       <MobileMenu
