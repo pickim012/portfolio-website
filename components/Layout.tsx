@@ -13,6 +13,12 @@ import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
 function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setIsVisible(true))
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
 
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black text-center">
@@ -22,7 +28,7 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center"
+        className={`object-cover object-center transition-opacity duration-700 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       />
       <span
         aria-hidden="true"
@@ -36,7 +42,10 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         aria-label={`Enter ${ARTIST_NAME.first} ${ARTIST_NAME.last}'s website`}
         className="absolute left-1/2 top-1/2 flex h-[40vh] w-[40vw] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center text-center"
       >
-        <span className="relative z-10 font-display text-3xl leading-[1.15] text-white md:text-5xl">
+        <span
+          className={`relative z-10 font-display text-3xl leading-[1.15] text-white transition-opacity duration-500 ease-out md:text-5xl ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transitionDelay: isVisible ? '180ms' : '0ms' }}
+        >
           {ARTIST_NAME.first} {ARTIST_NAME.last}
         </span>
       </button>
