@@ -11,21 +11,6 @@ import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
-function LandingBackdrop({ home }: { home: SiteContent['home'] }) {
-  return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-background" aria-hidden="true">
-      <Image
-        src={home.imageSrc || '/placeholder.svg'}
-        alt=""
-        fill
-        sizes="100vw"
-        className="object-cover object-center blur-[1.5px]"
-      />
-      <span className="absolute inset-0 bg-[rgba(255,255,255,0.25)]" />
-    </div>
-  )
-}
-
 function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -43,11 +28,11 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         fill
         priority
         sizes="100vw"
-        className={`object-cover object-center transition-[opacity,filter] duration-700 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'} ${isZoneHovered ? 'blur-[1.5px]' : 'blur-0'}`}
+        className={`object-cover object-center transition-opacity duration-700 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       />
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.32)] transition-opacity duration-300 ${isZoneHovered ? 'opacity-100' : 'opacity-0'}`}
+        className={`pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.25)] transition-opacity duration-300 ${isZoneHovered ? 'opacity-100' : 'opacity-0'}`}
       />
       <button
         type="button"
@@ -315,9 +300,7 @@ export function Layout({ content }: { content: SiteContent }) {
   }
 
   return (
-    <div className="relative min-h-screen bg-background">
-      {route.view === 'home' && <LandingBackdrop home={content.home} />}
-      <div className="relative z-10">
+    <div className="min-h-screen bg-background">
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
@@ -394,7 +377,6 @@ export function Layout({ content }: { content: SiteContent }) {
             </div>
           </div>
         )}
-      </div>
       </div>
     </div>
   )
