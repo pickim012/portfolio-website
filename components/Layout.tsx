@@ -4,12 +4,36 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUp } from 'lucide-react'
+import { ARTIST_NAME } from '@/lib/site-config'
 import { SidebarMenu, MobileMenu } from './Sidebar'
 import { Navigator } from './Navigator'
 import { Exhibition } from './Exhibition'
 import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
+
+function LandingScreen({ imageSrc, onEnter }: { imageSrc: string; onEnter: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onEnter}
+      aria-label={`Enter ${ARTIST_NAME.first} ${ARTIST_NAME.last}'s website`}
+      className="group relative flex min-h-screen w-full cursor-pointer items-center justify-center overflow-hidden bg-black text-center"
+    >
+      <Image
+        src={imageSrc || '/placeholder.svg'}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover transition-opacity duration-700 group-hover:opacity-75"
+      />
+      <span className="relative z-10 px-6 font-display text-3xl leading-[1.15] text-white transition-opacity duration-500 group-hover:opacity-90 md:text-5xl">
+        {ARTIST_NAME.first} {ARTIST_NAME.last}
+      </span>
+    </button>
+  )
+}
 
 function Home({ home }: { home: SiteContent['home'] }) {
   const paragraphs = home.body.split(/\n{2,}/).filter((p) => p.trim() !== '')
@@ -207,6 +231,7 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
 
 export function Layout({ content }: { content: SiteContent }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
+  const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
   const [showBackToTop, setShowBackToTop] = useState(false)
   const homeLeaveTimer = useRef<number | null>(null)
@@ -240,6 +265,10 @@ export function Layout({ content }: { content: SiteContent }) {
 
     // Keep other outgoing pages at their current position; scroll resets after exit.
     setRoute(next)
+  }
+
+  if (!hasEnteredSite) {
+    return <LandingScreen imageSrc={content.home.imageSrc} onEnter={() => setHasEnteredSite(true)} />
   }
 
   return (

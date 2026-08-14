@@ -137,19 +137,23 @@ export function SidebarMenu({
     <div className="flex flex-col gap-10">
       {/* Artist name → Home */}
       {showIdentity && (
-        <button
-          type="button"
-          onClick={() => {
-            if (isHome) setHomeMenuExpanded((value) => !value)
-            else onNavigate({ view: 'home' })
-          }}
-          aria-expanded={isHome ? homeMenuExpanded : undefined}
-          className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200"
-        >
-          {ARTIST_NAME.first}
-          <br />
-          {ARTIST_NAME.last}
-        </button>
+        isHome ? (
+          <div className="text-left font-display text-2xl leading-[1.15] text-foreground">
+            {ARTIST_NAME.first}
+            <br />
+            {ARTIST_NAME.last}
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onNavigate({ view: 'home' })}
+            className="text-left font-display text-2xl leading-[1.15] text-foreground transition-colors duration-200"
+          >
+            {ARTIST_NAME.first}
+            <br />
+            {ARTIST_NAME.last}
+          </button>
+        )
       )}
 
       {/* Menu tree. Each collapsible region is the LAST child of a no-gap
