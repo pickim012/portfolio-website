@@ -345,7 +345,7 @@ export function Layout({ content }: { content: SiteContent }) {
         {/* Column 2 — Content */}
         <main className="w-full">
           <AnimatePresence
-            mode="wait"
+            mode="sync"
             onExitComplete={() => {
               window.dispatchEvent(new CustomEvent('site:navigate'))
               window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
