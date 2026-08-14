@@ -243,7 +243,16 @@ export function Layout({ content }: { content: SiteContent }) {
   const homeLeaveTimer = useRef<number | null>(null)
 
   useEffect(() => {
+    const returnToLanding = () => {
+      if (homeLeaveTimer.current !== null) window.clearTimeout(homeLeaveTimer.current)
+      setHomeLeaving(false)
+      setRoute({ view: 'home' })
+      setHasEnteredSite(false)
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    }
+    window.addEventListener('site:return-landing', returnToLanding)
     return () => {
+      window.removeEventListener('site:return-landing', returnToLanding)
       if (homeLeaveTimer.current !== null) window.clearTimeout(homeLeaveTimer.current)
     }
   }, [])
