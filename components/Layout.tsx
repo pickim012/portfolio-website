@@ -231,7 +231,7 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
 function Content({ route, content }: { route: Route; content: SiteContent }) {
   switch (route.view) {
     case 'home':
-      return null
+      return <Home home={content.home} />
     case 'exhibitions':
       return <Exhibitions kind={route.kind} items={content.exhibitions} />
     case 'paintings':
