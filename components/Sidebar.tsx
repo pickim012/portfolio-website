@@ -240,10 +240,14 @@ export function SidebarMenu({
 export function MobileMenu({ route, onNavigate, paintingYears, hasTexts = false, isHome = false }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  // Close the mobile drawer whenever navigation completes.
+  useEffect(() => {
+    const closeAfterNavigation = () => setMobileOpen(false)
+    window.addEventListener('site:navigate', closeAfterNavigation)
+    return () => window.removeEventListener('site:navigate', closeAfterNavigation)
+  }, [])
+
   const handleNavigate = (next: Route) => {
     onNavigate(next)
-    setMobileOpen(false)
   }
 
   return (
