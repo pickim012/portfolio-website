@@ -252,8 +252,11 @@ export function MobileMenu({ route, onNavigate, paintingYears, hasTexts = false,
         <div className="font-display text-2xl leading-[1.15] text-foreground">
           <button
             type="button"
-            onClick={() => handleNavigate({ view: 'home' })}
-            aria-label="Go to home"
+          onClick={() => {
+            window.dispatchEvent(new CustomEvent('site:return-landing'))
+            setMobileOpen(false)
+          }}
+          aria-label="Go to landing page"
             className="block text-left"
           >
             {ARTIST_NAME.first}
