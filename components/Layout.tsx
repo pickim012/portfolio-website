@@ -21,7 +21,7 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
   }, [])
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black text-center">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background text-center">
       <Image
         src={home.imageSrc || '/placeholder.svg'}
         alt=""
