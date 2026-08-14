@@ -297,7 +297,7 @@ export function Layout({ content }: { content: SiteContent }) {
         tabIndex={showTopButton ? 0 : -1}
         className={`fixed bottom-6 right-6 z-40 text-xs tracking-[0.08em] text-foreground/40 transition-[opacity,color] duration-300 hover:text-hover-ink ${showTopButton ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
       >
-        TOP
+        ↑
       </button>
 
       {/* Mobile-only chrome */}
