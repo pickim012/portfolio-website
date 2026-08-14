@@ -43,11 +43,11 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         fill
         priority
         sizes="100vw"
-        className={`object-cover object-center transition-opacity duration-700 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+        className={`object-cover object-center transition-[opacity,filter] duration-700 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'} ${isZoneHovered ? 'blur-[1.5px]' : 'blur-0'}`}
       />
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.25)] transition-opacity duration-300 ${isZoneHovered ? 'opacity-100' : 'opacity-0'}`}
+        className={`pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.32)] transition-opacity duration-300 ${isZoneHovered ? 'opacity-100' : 'opacity-0'}`}
       />
       <button
         type="button"
