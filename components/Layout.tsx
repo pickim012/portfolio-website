@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowUp } from 'lucide-react'
-import { ARTIST_NAME } from '@/lib/site-config'
 import { SidebarMenu, MobileMenu } from './Sidebar'
 import { Navigator } from './Navigator'
 import { Exhibition } from './Exhibition'
@@ -12,51 +10,21 @@ import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
-function LandingScreen({ imageSrc, onEnter }: { imageSrc: string; onEnter: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onEnter}
-      aria-label={`Enter ${ARTIST_NAME.first} ${ARTIST_NAME.last}'s website`}
-      className="group relative flex min-h-screen w-full cursor-pointer items-center justify-center overflow-hidden bg-black text-center"
-    >
-      <Image
-        src={imageSrc || '/placeholder.svg'}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover transition-opacity duration-700 group-hover:opacity-75"
-      />
-      <span className="relative z-10 px-6 font-display text-3xl leading-[1.15] text-white transition-opacity duration-500 group-hover:opacity-90 md:text-5xl">
-        {ARTIST_NAME.first} {ARTIST_NAME.last}
-      </span>
-    </button>
-  )
-}
-
 function Home({ home }: { home: SiteContent['home'] }) {
   const paragraphs = home.body.split(/\n{2,}/).filter((p) => p.trim() !== '')
   return (
     <section className="flex flex-col gap-3 py-4">
       <figure className="flex w-fit max-w-full flex-col gap-3">
         {home.imageSrc ? (
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('site:toggle-home-menu'))}
-            aria-label="Open menu"
-            className="block w-fit max-w-full cursor-pointer text-left"
-          >
-            <Image
-              src={home.imageSrc || '/placeholder.svg'}
-              alt="Featured painting"
-              width={1200}
-              height={800}
-              priority
-              sizes="(max-width: 768px) 100vw, 800px"
-              className="h-auto max-h-[calc(100svh-10rem)] w-auto max-w-full object-contain object-left-top transition-opacity duration-200 hover:opacity-90"
-            />
-          </button>
+          <Image
+            src={home.imageSrc || '/placeholder.svg'}
+            alt="Featured painting"
+            width={1200}
+            height={800}
+            priority
+            sizes="(max-width: 768px) 100vw, 800px"
+            className="h-auto max-h-[calc(100svh-10rem)] w-auto max-w-full object-contain object-left-top"
+          />
         ) : null}
         <figcaption className="flex w-full flex-col items-end gap-4 text-right">
         {paragraphs.map((line, i) => (
@@ -231,17 +199,8 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
 
 export function Layout({ content }: { content: SiteContent }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
-  const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
-  const [showBackToTop, setShowBackToTop] = useState(false)
   const homeLeaveTimer = useRef<number | null>(null)
-
-  useEffect(() => {
-    const handleScroll = () => setShowBackToTop(window.scrollY > 240)
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   useEffect(() => {
     return () => {
@@ -267,23 +226,8 @@ export function Layout({ content }: { content: SiteContent }) {
     setRoute(next)
   }
 
-  if (!hasEnteredSite) {
-    return <LandingScreen imageSrc={content.home.imageSrc} onEnter={() => setHasEnteredSite(true)} />
-  }
-
   return (
     <div className="min-h-screen bg-background">
-      <button
-        type="button"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        aria-label="Back to top"
-        aria-hidden={!showBackToTop}
-        tabIndex={showBackToTop ? 0 : -1}
-        className={`fixed bottom-6 right-6 z-40 rounded-md p-2 text-foreground/45 transition-[opacity,color] duration-300 hover:text-hover-ink ${showBackToTop ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-      >
-        <ArrowUp className="h-4 w-4" strokeWidth={1.5} />
-      </button>
-
       {/* Mobile-only chrome */}
       <MobileMenu
         route={route}
