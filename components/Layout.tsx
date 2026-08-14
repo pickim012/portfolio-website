@@ -307,7 +307,7 @@ export function Layout({ content }: { content: SiteContent }) {
         aria-label="Back to top"
         aria-hidden={!showBackToTop}
         tabIndex={showBackToTop ? 0 : -1}
-        className={`fixed bottom-6 right-6 z-40 text-lg leading-none text-foreground/40 transition-[opacity,color] duration-300 hover:text-hover-ink ${showBackToTop ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed bottom-6 right-6 z-40 text-lg leading-none text-foreground/40 transition-[opacity,color] duration-300 hover:text-hover-ink md:right-[clamp(1.5rem,calc((100vw-1440px)/2+11.25rem),16rem)] ${showBackToTop ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
       >
         ↑
       </button>
