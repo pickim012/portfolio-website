@@ -13,12 +13,7 @@ import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
 function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onEnter}
-      aria-label={`Enter ${ARTIST_NAME.first} ${ARTIST_NAME.last}'s website`}
-      className="group relative flex min-h-screen w-full cursor-pointer items-center justify-center overflow-hidden bg-black text-center"
-    >
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black text-center">
       <Image
         src={home.imageSrc || '/placeholder.svg'}
         alt=""
@@ -27,16 +22,23 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         sizes="100vw"
         className="object-cover object-center"
       />
-      <span className="pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.25)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      <span className="relative z-10 font-display text-3xl leading-[1.15] text-white md:text-5xl">
-        {ARTIST_NAME.first} {ARTIST_NAME.last}
-      </span>
+      <button
+        type="button"
+        onClick={onEnter}
+        aria-label={`Enter ${ARTIST_NAME.first} ${ARTIST_NAME.last}'s website`}
+        className="group absolute left-1/2 top-1/2 flex h-[40vh] w-[40vw] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center text-center"
+      >
+        <span className="pointer-events-none absolute inset-0 bg-[rgba(255,255,255,0.25)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <span className="relative z-10 font-display text-3xl leading-[1.15] text-white md:text-5xl">
+          {ARTIST_NAME.first} {ARTIST_NAME.last}
+        </span>
+      </button>
       {home.body.trim() && (
         <span className="absolute bottom-6 right-6 z-10 max-w-[min(28rem,calc(100%-3rem))] text-right text-sm leading-[1.45] text-white">
           {home.body}
         </span>
       )}
-    </button>
+    </div>
   )
 }
 
