@@ -128,7 +128,7 @@ export function SidebarMenu({
   }, [route])
 
   return (
-    <div className={`flex flex-col gap-10 ${centered ? 'items-center text-center [&_button]:text-center' : ''}`}>
+    <div className={`flex flex-col gap-10 ${centered ? 'w-max' : ''}`}>
       {/* Artist name → Home */}
       {showIdentity && (
         <button
