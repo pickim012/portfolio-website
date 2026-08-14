@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
+import { ArrowUp } from 'lucide-react'
 import { SidebarMenu, MobileMenu } from './Sidebar'
 import { Navigator } from './Navigator'
 import { Exhibition } from './Exhibition'
@@ -207,7 +208,15 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
 export function Layout({ content }: { content: SiteContent }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
   const [homeLeaving, setHomeLeaving] = useState(false)
+  const [showBackToTop, setShowBackToTop] = useState(false)
   const homeLeaveTimer = useRef<number | null>(null)
+
+  useEffect(() => {
+    const handleScroll = () => setShowBackToTop(window.scrollY > 240)
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -235,6 +244,17 @@ export function Layout({ content }: { content: SiteContent }) {
 
   return (
     <div className="min-h-screen bg-background">
+      {showBackToTop && (
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Back to top"
+          className="fixed bottom-6 right-6 z-40 rounded-md p-2 text-secondary-ink transition-colors duration-200 hover:text-hover-ink"
+        >
+          <ArrowUp className="h-4 w-4" strokeWidth={1.5} />
+        </button>
+      )}
+
       {/* Mobile-only chrome */}
       <MobileMenu
         route={route}
