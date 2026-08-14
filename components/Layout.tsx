@@ -275,7 +275,7 @@ export function Layout({ content }: { content: SiteContent }) {
       window.removeEventListener('site:return-landing', returnToLanding)
       if (homeLeaveTimer.current !== null) window.clearTimeout(homeLeaveTimer.current)
     }
-  }, [])
+  }, [homeLeaving, route])
 
   const handleNavigate = (next: Route) => {
     if (routeKey(next) === routeKey(route) || homeLeaving) return
@@ -300,7 +300,7 @@ export function Layout({ content }: { content: SiteContent }) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`min-h-screen bg-background transition-opacity duration-[350ms] ease-out ${homeLeaving ? 'opacity-0' : 'opacity-100'}`}>
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
