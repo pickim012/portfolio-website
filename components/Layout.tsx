@@ -43,7 +43,7 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         className="absolute left-1/2 top-1/2 flex h-[40vh] w-[40vw] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center text-center"
       >
         <span
-          className={`relative z-10 font-display text-3xl leading-[1.15] text-white transition-opacity duration-500 ease-out md:text-5xl ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+          className={`relative z-10 font-display text-2xl leading-[1.15] text-white transition-opacity duration-500 ease-out md:text-4xl ${isVisible ? 'opacity-100' : 'opacity-0'}`}
           style={{ transitionDelay: isVisible ? '180ms' : '0ms' }}
         >
           {ARTIST_NAME.first} {ARTIST_NAME.last}
