@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Playfair_Display, EB_Garamond, Newsreader } from 'next/font/google'
+import { Playfair_Display, EB_Garamond } from 'next/font/google'
 import { SmoothScroll } from '@/components/SmoothScroll'
 import './globals.css'
 
@@ -17,14 +17,6 @@ const ebGaramond = EB_Garamond({
   weight: ['400', '500'],
   style: ['normal', 'italic'],
   variable: '--font-garamond',
-  display: 'swap',
-})
-
-const newsreader = Newsreader({
-  subsets: ['latin'],
-  weight: ['200'],
-  style: ['normal', 'italic'],
-  variable: '--font-newsreader-family',
   display: 'swap',
 })
 
@@ -65,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${ebGaramond.variable} ${newsreader.variable} bg-background`}
+      className={`${playfair.variable} ${ebGaramond.variable} bg-background`}
     >
       <body className="font-serif antialiased">
         <SmoothScroll>

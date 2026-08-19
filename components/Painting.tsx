@@ -57,7 +57,7 @@ export function Painting({ painting }: { painting: PublicPainting }) {
         transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
       >
         <span className="font-serif text-sm italic text-foreground">{painting.title}</span>
-        <span className="font-newsreader text-[10px] font-extralight leading-[1.2] text-secondary-ink">{painting.details}</span>
+        <span className="font-serif text-xs font-light leading-[1.2] text-secondary-ink">{painting.details}</span>
       </motion.figcaption>
     </motion.figure>
   )

@@ -7,7 +7,6 @@
 @theme inline {
   --font-serif: var(--font-garamond), Georgia, 'Times New Roman', serif;
   --font-display: var(--font-playfair), Georgia, serif;
-  --font-newsreader: var(--font-newsreader-family), Georgia, serif;
   --color-secondary-ink: var(--secondary-ink);
   --color-hover-ink: var(--hover-ink);
   --color-sidebar-ring: var(--sidebar-ring);

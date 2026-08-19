@@ -174,7 +174,7 @@ function CV({
       {cv.map((section) => (
         <div key={section.id} className="flex flex-col gap-1">
           <h2 className="text-base leading-[1.2] text-secondary-ink">{section.label === 'Group Exhibitions' ? 'Selected Group Exhibitions' : section.label}</h2>
-          <p className="whitespace-pre-line pl-2 font-newsreader text-sm font-extralight leading-[1.45] text-foreground/75">
+          <p className="whitespace-pre-line pl-2 text-base leading-[1.45] text-foreground/75">
             {section.content}
           </p>
         </div>
@@ -213,12 +213,12 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
               href={contact.href}
               target={contact.href.startsWith('http') ? '_blank' : undefined}
               rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="pl-2 font-newsreader text-sm font-extralight leading-[1.6] text-foreground/75 transition-colors duration-200 hover:text-hover-ink"
+              className="pl-2 text-base leading-[1.6] text-foreground/75 transition-colors duration-200 hover:text-hover-ink"
             >
               {contact.value}
             </a>
           ) : (
-            <p className="whitespace-pre-line pl-2 font-newsreader text-sm font-extralight leading-[1.6] text-foreground/75">
+            <p className="whitespace-pre-line pl-2 text-base leading-[1.6] text-foreground/75">
               {contact.value}
             </p>
           )}
