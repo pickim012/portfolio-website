@@ -56,8 +56,8 @@ export function Painting({ painting }: { painting: PublicPainting }) {
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
       >
-        <span className="font-serif text-sm italic text-foreground">{painting.title}</span>
-        <span className="font-newsreader text-[10px] font-extralight leading-[1.2] text-secondary-ink">{painting.details}</span>
+        <span className="font-serif text-base italic text-foreground">{painting.title}</span>
+        <span className="font-newsreader text-xs font-extralight leading-[1.2] text-hover-ink">{painting.details}</span>
       </motion.figcaption>
     </motion.figure>
   )
