@@ -78,7 +78,7 @@ function Home({ home }: { home: SiteContent['home'] }) {
         {paragraphs.map((line, i) => (
           <p
             key={i}
-            className="whitespace-pre-line text-sm leading-[1.45] text-hover-ink text-pretty"
+            className="whitespace-pre-line text-sm leading-[1.45] text-secondary-ink text-pretty"
           >
             {line}
           </p>
@@ -100,7 +100,7 @@ function Exhibitions({
   return (
     <section className="flex flex-col gap-40 py-4">
       {shown.length === 0 ? (
-        <p className="text-center text-base text-hover-ink">
+        <p className="text-center text-base text-secondary-ink">
           No {kind} exhibitions yet.
         </p>
       ) : (
@@ -144,7 +144,7 @@ function Paintings({
   return (
     <section className="flex flex-col gap-24 py-4">
       {works.length === 0 ? (
-        <p className="text-center text-base text-hover-ink">
+        <p className="text-center text-base text-secondary-ink">
           No works for {year}.
         </p>
       ) : (
@@ -173,16 +173,16 @@ function CV({
       )}
       {cv.map((section) => (
         <div key={section.id} className="flex flex-col gap-1">
-          <h2 className="text-base leading-[1.2] text-foreground/75">{section.label === 'Group Exhibitions' ? 'Selected Group Exhibitions' : section.label}</h2>
-          <p className="whitespace-pre-line pl-2 font-newsreader text-sm font-extralight leading-[1.55] text-foreground/75">
+          <h2 className="text-base leading-[1.2] text-secondary-ink">{section.label === 'Group Exhibitions' ? 'Selected Group Exhibitions' : section.label}</h2>
+          <p className="whitespace-pre-line pl-2 font-newsreader text-sm font-extralight leading-[1.45] text-foreground/75">
             {section.content}
           </p>
         </div>
       ))}
       {cvLinks.length > 0 && (
         <div className="flex flex-col gap-1">
-<h2 className="text-base leading-[1.2] text-foreground/75">Links</h2>
-          <div className="flex flex-col gap-1 pl-2 font-newsreader text-sm font-extralight leading-[1.55] text-foreground/75">
+          <h2 className="text-base leading-[1.2] text-secondary-ink">Links</h2>
+          <div className="flex flex-col gap-1 pl-2 text-base leading-[1.45] text-foreground/75">
             {cvLinks.map((link) => (
               <a
                 key={link.id}
@@ -207,7 +207,7 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
       <h1 className="font-display text-xl leading-[1.3] text-foreground">Contacts</h1>
       {contacts.map((contact) => (
         <div key={contact.id} className="flex flex-col gap-1">
-          <span className="text-base leading-[1.2] text-hover-ink">{contact.label}</span>
+          <span className="text-base leading-[1.2] text-secondary-ink">{contact.label}</span>
           {contact.href ? (
             <a
               href={contact.href}

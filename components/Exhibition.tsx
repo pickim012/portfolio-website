@@ -8,9 +8,9 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
         <h2 className="font-display text-2xl italic leading-[1.25] text-foreground text-balance">
           {exhibition.title}
         </h2>
-        <p className="mt-4 font-newsreader text-sm font-extralight leading-[1.15] text-hover-ink">{exhibition.date}</p>
-        <p className="font-newsreader text-sm font-extralight leading-[1.15] text-hover-ink">{exhibition.gallery}</p>
-        <p className="font-newsreader text-sm font-extralight leading-[1.15] text-hover-ink">{exhibition.address}</p>
+        <p className="mt-4 font-newsreader text-sm font-extralight leading-[1.15] text-secondary-ink">{exhibition.date}</p>
+        <p className="font-newsreader text-sm font-extralight leading-[1.15] text-secondary-ink">{exhibition.gallery}</p>
+        <p className="font-newsreader text-sm font-extralight leading-[1.15] text-secondary-ink">{exhibition.address}</p>
       </header>
 
       <div className="flex w-full flex-col gap-10">
@@ -29,13 +29,13 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
       </div>
 
       {exhibition.about.trim() !== '' && (
-        <p className="mt-12 w-full whitespace-pre-line pl-2 font-newsreader text-sm font-extralight leading-relaxed text-hover-ink">
+        <p className="mt-12 w-full whitespace-pre-line pl-2 font-newsreader text-sm font-extralight leading-relaxed text-secondary-ink">
           {exhibition.about}
         </p>
       )}
 
       {exhibition.links.length > 0 && (
-        <div className="mt-8 w-full pl-2 text-left font-newsreader text-sm font-extralight leading-[1.45] text-hover-ink">
+        <div className="mt-8 w-full pl-2 text-left font-newsreader text-sm font-extralight leading-[1.45] text-secondary-ink">
           {exhibition.links.map((link, index) => (
             <span key={link.id}>
               <a
