@@ -167,7 +167,7 @@ function CV({
     <section className="flex flex-col gap-8 py-4">
       <h1 className="font-display text-xl leading-[1.2] text-foreground">CV</h1>
       {cvIntro.trim() && (
-        <p className="-mt-3 whitespace-pre-line pl-2 font-serif text-lg not-italic leading-[1.35] text-foreground/75">
+        <p className="-mt-3 whitespace-pre-line pl-3 font-serif text-lg not-italic leading-[1.35] text-foreground/75">
           {cvIntro}
         </p>
       )}
