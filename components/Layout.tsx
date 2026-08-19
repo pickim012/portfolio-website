@@ -173,16 +173,16 @@ function CV({
       )}
       {cv.map((section) => (
         <div key={section.id} className="flex flex-col gap-1">
-          <h2 className="text-base leading-[1.2] text-foreground">{section.label === 'Group Exhibitions' ? 'Selected Group Exhibitions' : section.label}</h2>
-          <p className="whitespace-pre-line pl-2 font-newsreader text-sm font-extralight leading-[1.45] text-foreground/75">
+          <h2 className="text-base leading-[1.2] text-foreground/75">{section.label === 'Group Exhibitions' ? 'Selected Group Exhibitions' : section.label}</h2>
+          <p className="whitespace-pre-line pl-2 font-newsreader text-sm font-extralight leading-[1.55] text-foreground/75">
             {section.content}
           </p>
         </div>
       ))}
       {cvLinks.length > 0 && (
         <div className="flex flex-col gap-1">
-          <h2 className="text-base leading-[1.2] text-foreground">Links</h2>
-<div className="flex flex-col gap-1 pl-2 font-newsreader text-sm font-extralight leading-[1.45] text-foreground/75">
+<h2 className="text-base leading-[1.2] text-foreground/75">Links</h2>
+          <div className="flex flex-col gap-1 pl-2 font-newsreader text-sm font-extralight leading-[1.55] text-foreground/75">
             {cvLinks.map((link) => (
               <a
                 key={link.id}
