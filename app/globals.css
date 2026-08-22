@@ -165,7 +165,19 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
   }
 }
