@@ -35,21 +35,6 @@ function toStringArray(value: unknown): string[] {
     .filter(Boolean)
 }
 
-function parseHomeImagePairs(imageUrl: string): { imageSrc: string; caption: string }[] {
-  try {
-    const parsed = JSON.parse(imageUrl)
-    if (Array.isArray(parsed)) {
-      return parsed
-        .filter((item) => item && typeof item.imageSrc === 'string')
-        .slice(0, 5)
-        .map((item) => ({ imageSrc: item.imageSrc, caption: typeof item.caption === 'string' ? item.caption : '' }))
-    }
-  } catch {
-    // Existing single-image values remain supported.
-  }
-  return imageUrl ? [{ imageSrc: imageUrl, caption: '' }] : []
-}
-
 function contactHref(id: string, value: string): string | undefined {
   if (!value) return undefined
   if (id === 'email') return `mailto:${value}`
@@ -78,10 +63,9 @@ export async function getSiteContent(): Promise<SiteContent> {
       db.select().from(textsContent).limit(1),
     ])
 
-  const homePairs = homeRows[0] ? parseHomeImagePairs(homeRows[0].imageUrl) : []
   const home = homeRows[0]
-    ? { imageSrc: homePairs[0]?.imageSrc ?? '', body: homeRows[0].body, imagePairs: homePairs }
-    : { imageSrc: '', body: '', imagePairs: [] }
+    ? { imageSrc: homeRows[0].imageUrl, body: homeRows[0].body }
+    : { imageSrc: '', body: '' }
 
   const textsLinks = ((textsRows[0]?.links as CvLink[] | undefined) ?? [])
     .filter((l) => l.title.trim() !== '' && l.url.trim() !== '')

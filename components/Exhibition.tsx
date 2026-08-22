@@ -22,7 +22,7 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
             width={1200}
             height={800}
             loading="lazy"
-            sizes="(max-width: 768px) 100%, 900px"
+            sizes="(max-width: 768px) 100vw, 900px"
             className="h-auto w-full"
           />
         ))}

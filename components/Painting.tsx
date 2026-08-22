@@ -42,7 +42,7 @@ export function Painting({ painting }: { painting: PublicPainting }) {
               width={1200}
               height={1500}
               loading="lazy"
-              sizes="(max-width: 768px) 100%, 880px"
+              sizes="(max-width: 768px) 100vw, 880px"
               className="h-auto w-full"
             />
           </motion.div>
