@@ -170,7 +170,6 @@
        tall pages never changes the viewport width. Without this, the centered
        layout (and the sidebar/navigator with it) jumps horizontally when the
        scrollbar appears or disappears. */
-    scrollbar-gutter: stable;
   }
   body {
     @apply bg-background text-foreground;
