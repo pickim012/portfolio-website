@@ -25,8 +25,7 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
   }, [])
 
   return (
-    <>
-      <div className="fixed inset-0 z-0 flex items-center justify-center overflow-hidden bg-background text-center">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background text-center">
       <Image
         src={selectedPair.imageSrc || '/placeholder.svg'}
         alt=""
@@ -59,9 +58,7 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
           {selectedPair.caption}
         </span>
       )}
-      </div>
-      <div aria-hidden="true" className="h-screen" />
-    </>
+    </div>
   )
 }
 
