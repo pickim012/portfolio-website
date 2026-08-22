@@ -29,14 +29,14 @@ function revalidateAll() {
 // ---------------------------------------------------------------------------
 // Home
 // ---------------------------------------------------------------------------
-export async function saveHome(input: { imageUrl: string; body: string }) {
+export async function saveHome(input: { imageUrl: string; body?: string; imagePairs?: { imageSrc: string; caption: string }[] }) {
   await assertAdmin()
   await db
     .insert(homeContent)
-    .values({ id: 1, imageUrl: input.imageUrl, body: input.body, updatedAt: new Date() })
+    .values({ id: 1, imageUrl: input.imagePairs ? JSON.stringify(input.imagePairs) : input.imageUrl, body: input.body ?? '', updatedAt: new Date() })
     .onConflictDoUpdate({
       target: homeContent.id,
-      set: { imageUrl: input.imageUrl, body: input.body, updatedAt: new Date() },
+      set: { imageUrl: input.imagePairs ? JSON.stringify(input.imagePairs) : input.imageUrl, ...(input.body === undefined ? {} : { body: input.body }), updatedAt: new Date() },
     })
   revalidateAll()
 }

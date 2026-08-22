@@ -107,9 +107,11 @@ export type PublicContact = {
   href?: string
 }
 
+export type HomeImagePair = { imageSrc: string; caption: string }
+
 export type SiteContent = {
   textsLinks: CvLink[]
-  home: { imageSrc: string; body: string }
+  home: { imageSrc: string; body: string; imagePairs: HomeImagePair[] }
   exhibitions: PublicExhibition[]
   paintingsByYear: Record<string, PublicPainting[]>
   paintingYears: string[]

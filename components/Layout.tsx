@@ -14,6 +14,10 @@ import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const [selectedPair] = useState(() => {
+    const pairs = home.imagePairs?.filter((pair) => pair.imageSrc) ?? []
+    return pairs[Math.floor(Math.random() * pairs.length)] ?? { imageSrc: home.imageSrc, caption: '' }
+  })
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => setIsVisible(true))
@@ -23,7 +27,7 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background text-center">
       <Image
-        src={home.imageSrc || '/placeholder.svg'}
+        src={selectedPair.imageSrc || '/placeholder.svg'}
         alt=""
         fill
         priority
@@ -49,9 +53,9 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
           {ARTIST_NAME.first} {ARTIST_NAME.last}
         </span>
       </button>
-      {home.body.trim() && (
+      {selectedPair.caption.trim() && (
         <span className="absolute bottom-6 right-6 z-10 max-w-[min(28rem,calc(100%-3rem))] text-right text-sm leading-[1.45] text-white">
-          {home.body}
+          {selectedPair.caption}
         </span>
       )}
     </div>
@@ -65,7 +69,7 @@ function Home({ home }: { home: SiteContent['home'] }) {
       <figure className="flex w-fit max-w-full flex-col gap-3">
         {home.imageSrc ? (
           <Image
-            src={home.imageSrc || '/placeholder.svg'}
+src={home.imageSrc || '/placeholder.svg'}
             alt="Featured painting"
             width={1200}
             height={800}
