@@ -376,7 +376,7 @@ export function Layout({ content }: { content: SiteContent }) {
         {/* Column 3 — Navigator (reserved on non-home pages only) */}
         {route.view !== 'home' && (
           <div className="hidden md:block">
-            <div className="sticky top-[60px]">
+            <div className="fixed right-[2.5rem] top-[60px] z-30 xl:right-[max(2.5rem,calc((100vw-1440px)/2+2.5rem))]">
               <Navigator route={route} />
             </div>
           </div>
