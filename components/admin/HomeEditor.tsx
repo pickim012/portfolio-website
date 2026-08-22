@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { saveHome } from "@/app/admin/(dashboard)/actions"
-import { Btn, Field, TextArea, TextInput } from "./ui"
+import { Btn, Field, TextInput } from "./ui"
 
 type Pair = { imageSrc: string; caption: string }
 
@@ -14,7 +14,6 @@ export function HomeEditor({ initial }: { initial: { imageUrl: string; body: str
     } catch { return [{ imageSrc: initial.imageUrl, caption: "" }] }
   })()
   const [pairs, setPairs] = useState<Pair[]>([...initialPairs, ...Array.from({ length: 5 - initialPairs.length }, () => ({ imageSrc: "", caption: "" }))].slice(0, 5))
-  const [body, setBody] = useState(initial.body)
   const [pending, startTransition] = useTransition()
   const [saved, setSaved] = useState(false)
 
@@ -26,7 +25,7 @@ export function HomeEditor({ initial }: { initial: { imageUrl: string; body: str
   function handleSubmit() {
     setSaved(false)
     startTransition(async () => {
-      await saveHome({ imageUrl: pairs[0].imageSrc, body, imagePairs: pairs.filter((pair) => pair.imageSrc.trim()) })
+      await saveHome({ imageUrl: pairs[0].imageSrc, imagePairs: pairs.filter((pair) => pair.imageSrc.trim()) })
       setSaved(true)
     })
   }
@@ -46,9 +45,6 @@ export function HomeEditor({ initial }: { initial: { imageUrl: string; body: str
           </Field>
         </div>
       ))}
-      <Field label="Text" hint="Line breaks are preserved exactly as typed.">
-        <TextArea value={body} onChange={(e) => { setBody(e.target.value); setSaved(false) }} rows={6} />
-      </Field>
       <div className="flex items-center gap-3">
         <Btn variant="primary" onClick={handleSubmit} disabled={pending}>{pending ? "Uploading..." : "Upload"}</Btn>
         {saved && <span className="text-sm text-green-600">Saved and published.</span>}

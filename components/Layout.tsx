@@ -53,9 +53,9 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
           {ARTIST_NAME.first} {ARTIST_NAME.last}
         </span>
       </button>
-      {(selectedPair.caption.trim() || home.body.trim()) && (
+      {selectedPair.caption.trim() && (
         <span className="absolute bottom-6 right-6 z-10 max-w-[min(28rem,calc(100%-3rem))] text-right text-sm leading-[1.45] text-white">
-          {selectedPair.caption.trim() || home.body}
+          {selectedPair.caption}
         </span>
       )}
     </div>
