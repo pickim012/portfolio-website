@@ -31,7 +31,7 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
         alt=""
         fill
         priority
-        sizes="100vw"
+        sizes="100%"
         className={`object-cover object-center transition-opacity duration-700 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
       />
       <span
@@ -74,7 +74,7 @@ src={home.imageSrc || '/placeholder.svg'}
             width={1200}
             height={800}
             priority
-            sizes="(max-width: 768px) 100vw, 800px"
+            sizes="(max-width: 768px) 100%, 800px"
             className="h-auto max-h-[calc(100svh-10rem)] w-auto max-w-full object-contain object-left-top"
           />
         ) : null}
