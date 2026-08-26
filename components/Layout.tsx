@@ -14,12 +14,13 @@ import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const [selectedPair] = useState(() => {
-    const pairs = home.imagePairs?.filter((pair) => pair.imageSrc) ?? []
-    return pairs[Math.floor(Math.random() * pairs.length)] ?? { imageSrc: home.imageSrc, caption: '' }
-  })
+  const pairs = home.imagePairs?.filter((pair) => pair.imageSrc) ?? []
+  const [selectedPair, setSelectedPair] = useState(() => pairs[0] ?? { imageSrc: home.imageSrc, caption: '' })
 
   useEffect(() => {
+    if (pairs.length > 1) {
+      setSelectedPair(pairs[Math.floor(Math.random() * pairs.length)])
+    }
     const frame = window.requestAnimationFrame(() => setIsVisible(true))
     return () => window.cancelAnimationFrame(frame)
   }, [])
