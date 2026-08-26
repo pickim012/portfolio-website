@@ -309,7 +309,7 @@ export function Layout({ content }: { content: SiteContent }) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
@@ -337,7 +337,7 @@ export function Layout({ content }: { content: SiteContent }) {
       )}
 
       {/* True three-column grid: | Sidebar | Content | Navigator | */}
-      <div className={`mx-auto grid max-w-[1440px] grid-cols-1 px-5 pb-32 pt-24 md:px-10 md:pt-[60px] ${route.view === 'home' ? 'md:grid-cols-[170px_minmax(0,1fr)] md:gap-x-10' : 'md:grid-cols-[170px_minmax(0,1fr)_140px] md:justify-center md:gap-x-10 lg:gap-x-16'}`}>
+      <div className={`flex w-full flex-1 flex-col mx-auto max-w-[1440px] grid-cols-1 px-5 pb-32 pt-24 md:grid md:px-10 md:pt-[60px] ${route.view === 'home' ? 'md:grid-cols-[170px_minmax(0,1fr)] md:gap-x-10' : 'md:grid-cols-[170px_minmax(0,1fr)_140px] md:justify-center md:gap-x-10 lg:gap-x-16'}`}>
         {/* Column 1 — Sidebar */}
         <aside className="hidden md:block">
           <div className="sticky top-[60px]">
@@ -358,7 +358,7 @@ export function Layout({ content }: { content: SiteContent }) {
         </aside>
 
         {/* Column 2 — Content */}
-        <main className="relative z-10 w-full">
+        <main className="w-full">
           <AnimatePresence
             mode="wait"
             onExitComplete={() => {
@@ -387,7 +387,7 @@ export function Layout({ content }: { content: SiteContent }) {
           </div>
         )}
       </div>
-      <footer className="fixed inset-x-0 bottom-4 z-[1] px-5 text-center font-serif text-xs leading-relaxed tracking-wide text-foreground/40 md:px-10">
+      <footer className="mt-auto px-5 pb-8 text-center font-serif text-xs leading-relaxed tracking-wide text-foreground/40 md:px-10">
         © 2026 Kim Yeadam. All rights reserved. No part of this website may be reproduced without permission.
       </footer>
     </div>
