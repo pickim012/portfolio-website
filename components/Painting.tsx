@@ -1,21 +1,12 @@
 'use client'
 
-import { useRef } from 'react'
 import Image from 'next/image'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import type { PublicPainting } from '@/lib/content'
 
 export function Painting({ painting }: { painting: PublicPainting }) {
-  const figureRef = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: figureRef,
-    offset: ['start end', 'end start'],
-  })
-  const imageY = useTransform(scrollYProgress, [0, 1], [-5, 5])
-
   return (
     <motion.figure
-      ref={figureRef}
       className="flex flex-col items-center"
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -26,7 +17,6 @@ export function Painting({ painting }: { painting: PublicPainting }) {
         {painting.images.map((src, i) => (
           <motion.div
             key={`${src}-${i}`}
-            style={{ y: imageY }}
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.08 }}
