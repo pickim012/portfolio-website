@@ -358,7 +358,7 @@ export function Layout({ content }: { content: SiteContent }) {
         </aside>
 
         {/* Column 2 — Content */}
-        <main className="w-full">
+        <main className="relative z-10 w-full">
           <AnimatePresence
             mode="wait"
             onExitComplete={() => {
@@ -387,7 +387,7 @@ export function Layout({ content }: { content: SiteContent }) {
           </div>
         )}
       </div>
-      <footer className="fixed inset-x-0 bottom-4 z-0 px-5 text-center font-serif text-xs leading-relaxed tracking-wide text-foreground/40 md:px-10">
+      <footer className="fixed inset-x-0 bottom-4 z-[1] px-5 text-center font-serif text-xs leading-relaxed tracking-wide text-foreground/40 md:px-10">
         © 2026 Kim Yeadam. All rights reserved. No part of this website may be reproduced without permission.
       </footer>
     </div>
