@@ -19,7 +19,11 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
 
   useEffect(() => {
     if (pairs.length > 1) {
-      setSelectedPair(pairs[Math.floor(Math.random() * pairs.length)])
+      const storageKey = 'kim-yeadam-landing-index'
+      const storedIndex = Number.parseInt(window.localStorage.getItem(storageKey) ?? '', 10)
+      const nextIndex = Number.isInteger(storedIndex) ? (storedIndex + 1) % pairs.length : 0
+      window.localStorage.setItem(storageKey, String(nextIndex))
+      setSelectedPair(pairs[nextIndex])
     }
     const frame = window.requestAnimationFrame(() => setIsVisible(true))
     return () => window.cancelAnimationFrame(frame)
