@@ -382,6 +382,9 @@ export function Layout({ content }: { content: SiteContent }) {
           </div>
         )}
       </div>
+      <footer className="fixed inset-x-0 bottom-4 z-20 px-5 text-center font-serif text-xs leading-relaxed tracking-wide text-foreground/40 md:px-10">
+        © 2026 Kim Yeadam. All rights reserved. No part of this website may be reproduced without permission.
+      </footer>
     </div>
   )
 }
