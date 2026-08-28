@@ -29,22 +29,27 @@ function MenuItem({
   indent = 0,
   small = false,
   onClick,
+  interactive = true,
+  muted = false,
 }: {
   label: string
   active?: boolean
   indent?: number
   small?: boolean
-  onClick: () => void
+  onClick?: () => void
+  interactive?: boolean
+  muted?: boolean
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={!interactive}
       aria-current={active ? 'page' : undefined}
       style={{ paddingLeft: `${indent * 16}px` }}
-      className={`block w-full text-left leading-[1.15] transition-colors duration-200 ${
+      className={`block w-full text-left leading-[1.15] ${
         small ? 'text-sm' : 'text-base leading-[1.25]'
-      } ${active ? 'text-foreground' : 'text-secondary-ink hover:text-hover-ink'}`}
+      } ${active ? 'text-foreground' : muted || !interactive ? 'text-secondary-ink' : 'text-secondary-ink transition-colors duration-200 hover:text-hover-ink'}`}
     >
       {label}
     </button>
@@ -100,27 +105,16 @@ export function SidebarMenu({
 
   // Independent toggle state: each submenu opens/closes on its own,
   // and opening one never collapses the others.
-  const [worksExpanded, setWorksExpanded] = useState(
-    route.view === 'exhibitions' || route.view === 'paintings' || route.view === 'texts',
-  )
   const [aboutExpanded, setAboutExpanded] = useState(
     route.view === 'cv' || route.view === 'contacts',
   )
-  const [exhibitionsExpanded, setExhibitionsExpanded] = useState(route.view === 'exhibitions')
-  const [paintingsExpanded, setPaintingsExpanded] = useState(route.view === 'paintings')
+  const [exhibitionsExpanded, setExhibitionsExpanded] = useState(false)
+  const [paintingsExpanded, setPaintingsExpanded] = useState(false)
 
   // When the route changes elsewhere, ensure the relevant branch is open,
   // without collapsing any other submenu the user has already expanded.
   useEffect(() => {
-    if (route.view === 'exhibitions') {
-      setWorksExpanded(true)
-      setExhibitionsExpanded(true)
-    } else if (route.view === 'paintings') {
-      setWorksExpanded(true)
-      setPaintingsExpanded(true)
-    } else if (route.view === 'texts') {
-      setWorksExpanded(true)
-    } else if (route.view === 'cv' || route.view === 'contacts') {
+    if (route.view === 'cv' || route.view === 'contacts') {
       setAboutExpanded(true)
     }
   }, [route])
@@ -150,8 +144,8 @@ export function SidebarMenu({
         )}
         {/* Works */}
         <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
-          <MenuItem label="Works" onClick={() => setWorksExpanded((v) => !v)} />
-          <Collapse open={worksExpanded} innerClassName="flex flex-col gap-2 pt-2">
+          <MenuItem label="Works" interactive={false} muted />
+          <div className="flex flex-col gap-2 pt-2">
             {/* Exhibitions → Solo / Group */}
             <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
               <MenuItem
@@ -211,7 +205,7 @@ export function SidebarMenu({
                 onClick={() => onNavigate({ view: 'texts' })}
               />
             )}
-          </Collapse>
+          </div>
         </motion.div>
 
         {/* About */}
