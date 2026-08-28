@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { Component, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
 import { SidebarMenu, MobileMenu } from './Sidebar'
@@ -11,34 +11,15 @@ import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
-function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
+function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['home']; landingImage?: { imageSrc: string; caption: string }; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const pairs = home.imagePairs?.filter((pair) => pair.imageSrc) ?? []
-  const [selectedPair, setSelectedPair] = useState(() => pairs[0] ?? { imageSrc: home.imageSrc, caption: '' })
+  const selectedPair = landingImage ?? { imageSrc: home.imageSrc, caption: '' }
 
   useEffect(() => {
-    if (pairs.length > 1) {
-      const storageKey = 'kim-yeadam-landing-index'
-      const storedIndex = Number.parseInt(window.localStorage.getItem(storageKey) ?? '', 10)
-      const nextIndex = Number.isInteger(storedIndex) ? (storedIndex + 1) % pairs.length : 0
-      window.localStorage.setItem(storageKey, String(nextIndex))
-      setSelectedPair(pairs[nextIndex])
-    }
     const frame = window.requestAnimationFrame(() => setIsVisible(true))
     return () => window.cancelAnimationFrame(frame)
-  }, [pairs.length])
-
-  useEffect(() => {
-    if (pairs.length < 2) return
-    const interval = window.setInterval(() => {
-      setSelectedPair((current) => {
-        const currentIndex = pairs.findIndex((pair) => pair.imageSrc === current.imageSrc && pair.caption === current.caption)
-        return pairs[(currentIndex + 1) % pairs.length]
-      })
-    }, 6000)
-    return () => window.clearInterval(interval)
-  }, [pairs])
+  }, [])
 
   return (
     <div className="relative flex h-[100dvh] min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-background text-center">
@@ -123,9 +104,11 @@ src={home.imageSrc || '/placeholder.svg'}
 function Exhibitions({
   kind,
   items,
+  onImageError,
 }: {
   kind: ExhibitionKind
   items: SiteContent['exhibitions']
+  onImageError?: (message: string) => void
 }) {
   const shown = items.filter((exhibition) => exhibition.kind === kind)
   return (
@@ -136,7 +119,7 @@ function Exhibitions({
         </p>
       ) : (
         shown.map((exhibition) => (
-          <Exhibition key={exhibition.id} exhibition={exhibition} />
+          <Exhibition key={exhibition.id} exhibition={exhibition} onImageError={onImageError} />
         ))
       )}
     </section>
@@ -259,12 +242,32 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
   )
 }
 
-function Content({ route, content }: { route: Route; content: SiteContent }) {
+class GroupDebugBoundary extends Component<
+  { children: React.ReactNode; onError: (message: string) => void },
+  { error: string | null }
+> {
+  state = { error: null }
+
+  static getDerivedStateFromError(error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) }
+  }
+
+  componentDidCatch(error: unknown) {
+    this.props.onError(error instanceof Error ? error.stack || error.message : String(error))
+  }
+
+  render() {
+    if (!this.state.error) return this.props.children
+    return <div className="rounded border border-red-500 bg-red-50 p-4 font-mono text-sm text-red-900">Group debug error: {this.state.error}</div>
+  }
+}
+
+function Content({ route, content, onImageError }: { route: Route; content: SiteContent; onImageError?: (message: string) => void }) {
   switch (route.view) {
     case 'home':
       return null
     case 'exhibitions':
-      return <Exhibitions kind={route.kind} items={content.exhibitions} />
+      return <Exhibitions kind={route.kind} items={content.exhibitions} onImageError={onImageError} />
     case 'paintings':
       return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} />
     case 'texts':
@@ -276,11 +279,12 @@ function Content({ route, content }: { route: Route; content: SiteContent }) {
   }
 }
 
-export function Layout({ content }: { content: SiteContent }) {
+export function Layout({ content, landingImage }: { content: SiteContent; landingImage?: { imageSrc: string; caption: string } }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
   const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [groupDebugError, setGroupDebugError] = useState<string | null>(null)
   const homeLeaveTimer = useRef<number | null>(null)
 
   useEffect(() => {
@@ -327,7 +331,7 @@ export function Layout({ content }: { content: SiteContent }) {
   }
 
   if (!hasEnteredSite) {
-    return <LandingScreen home={content.home} onEnter={() => setHasEnteredSite(true)} />
+    return <LandingScreen home={content.home} landingImage={landingImage} onEnter={() => setHasEnteredSite(true)} />
   }
 
   return (
@@ -381,6 +385,11 @@ export function Layout({ content }: { content: SiteContent }) {
 
         {/* Column 2 — Content */}
         <main className="w-full">
+          {route.view === 'exhibitions' && route.kind === 'group' && groupDebugError && (
+            <div role="alert" className="mb-4 rounded border border-red-500 bg-red-50 p-4 font-mono text-xs leading-relaxed text-red-900">
+              Group debug error: {groupDebugError}
+            </div>
+          )}
           <AnimatePresence
             mode="wait"
             onExitComplete={() => {
@@ -395,7 +404,13 @@ export function Layout({ content }: { content: SiteContent }) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Content route={route} content={content} />
+              {route.view === 'exhibitions' && route.kind === 'group' ? (
+                <GroupDebugBoundary onError={setGroupDebugError}>
+                  <Content route={route} content={content} onImageError={setGroupDebugError} />
+                </GroupDebugBoundary>
+              ) : (
+                <Content route={route} content={content} />
+              )}
             </motion.div>
           </AnimatePresence>
         </main>

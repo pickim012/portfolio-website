@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import type { PublicExhibition } from '@/lib/content'
 
-export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
+export function Exhibition({ exhibition, onImageError }: { exhibition: PublicExhibition; onImageError?: (message: string) => void }) {
   return (
     <article className="flex flex-col items-center">
       <header className="mb-12 flex flex-col items-center gap-1 text-center leading-[1.25]">
@@ -24,6 +24,7 @@ export function Exhibition({ exhibition }: { exhibition: PublicExhibition }) {
             loading="lazy"
             sizes="(max-width: 768px) 100vw, 900px"
             className="h-auto w-full"
+            onError={() => onImageError?.(`Image failed to load: ${src}`)}
           />
         ))}
       </div>
