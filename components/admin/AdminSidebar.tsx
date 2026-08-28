@@ -110,6 +110,16 @@ export function AdminSidebar() {
         </ul>
       </nav>
 
+      <div className="border-t border-neutral-200 p-3">
+        <a
+          href="/api/admin/export"
+          download="kim-yeadam-content-backup.json"
+          className="mb-2 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-center text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100"
+        >
+          Export Content
+        </a>
+      </div>
+
       {/* Log out */}
       <div className="border-t border-neutral-200 p-3">
         <form action={logout}>
