@@ -27,11 +27,31 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
     }
     const frame = window.requestAnimationFrame(() => setIsVisible(true))
     return () => window.cancelAnimationFrame(frame)
-  }, [])
+  }, [pairs.length])
+
+  useEffect(() => {
+    if (pairs.length < 2) return
+    const interval = window.setInterval(() => {
+      setSelectedPair((current) => {
+        const currentIndex = pairs.findIndex((pair) => pair.imageSrc === current.imageSrc && pair.caption === current.caption)
+        return pairs[(currentIndex + 1) % pairs.length]
+      })
+    }, 6000)
+    return () => window.clearInterval(interval)
+  }, [pairs])
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background text-center">
-      <Image
+    <div className="relative flex h-[100dvh] min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-background text-center">
+      <AnimatePresence initial={false} mode="sync">
+        <motion.div
+          key={`${selectedPair.imageSrc}-${selectedPair.caption}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: 'easeInOut' }}
+          className="absolute inset-0"
+        >
+        <Image
         src={selectedPair.imageSrc || '/placeholder.svg'}
         alt=""
         fill
@@ -63,6 +83,8 @@ function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: 
           {selectedPair.caption}
         </span>
       )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   )
 }
