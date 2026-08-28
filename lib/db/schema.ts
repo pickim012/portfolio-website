@@ -9,6 +9,11 @@ import {
 } from 'drizzle-orm/pg-core'
 
 // Home page: single row (id = 1).
+export const landingRotation = pgTable('landing_rotation', {
+  id: integer('id').primaryKey().default(1),
+  nextIndex: integer('next_index').notNull().default(0),
+})
+
 export const homeContent = pgTable('home_content', {
   id: integer('id').primaryKey().default(1),
   imageUrl: text('image_url').notNull().default(''),

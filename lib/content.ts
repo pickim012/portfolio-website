@@ -1,10 +1,11 @@
-import { asc, desc } from 'drizzle-orm'
+import { asc, desc, eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import {
   contactsContent,
   cvContent,
   exhibitions,
   homeContent,
+  landingRotation,
   paintings,
   textsContent,
 } from '@/lib/db/schema'
@@ -59,6 +60,29 @@ function contactHref(id: string, value: string): string | undefined {
     return `https://instagram.com/${handle}`
   }
   return undefined
+}
+
+export async function claimLandingImage(pairs: { imageSrc: string; caption: string }[]) {
+  if (pairs.length === 0) return undefined
+
+  return db.transaction(async (tx) => {
+    const rows = await tx
+      .insert(landingRotation)
+      .values({ id: 1, nextIndex: 0 })
+      .onConflictDoNothing()
+      .returning({ nextIndex: landingRotation.nextIndex })
+    const current = rows[0]?.nextIndex ?? (await tx
+      .select({ nextIndex: landingRotation.nextIndex })
+      .from(landingRotation)
+      .where(eq(landingRotation.id, 1))
+      .for('update'))[0]?.nextIndex ?? 0
+    const index = current % pairs.length
+    await tx
+      .update(landingRotation)
+      .set({ nextIndex: index + 1 })
+      .where(eq(landingRotation.id, 1))
+    return pairs[index]
+  })
 }
 
 // ---------------------------------------------------------------------------

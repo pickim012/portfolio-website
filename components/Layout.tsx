@@ -11,34 +11,15 @@ import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
-function LandingScreen({ home, onEnter }: { home: SiteContent['home']; onEnter: () => void }) {
+function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['home']; landingImage?: { imageSrc: string; caption: string }; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const pairs = home.imagePairs?.filter((pair) => pair.imageSrc) ?? []
-  const [selectedPair, setSelectedPair] = useState(() => pairs[0] ?? { imageSrc: home.imageSrc, caption: '' })
+  const selectedPair = landingImage ?? { imageSrc: home.imageSrc, caption: '' }
 
   useEffect(() => {
-    if (pairs.length > 1) {
-      const storageKey = 'kim-yeadam-landing-index'
-      const storedIndex = Number.parseInt(window.localStorage.getItem(storageKey) ?? '', 10)
-      const nextIndex = Number.isInteger(storedIndex) ? (storedIndex + 1) % pairs.length : 0
-      window.localStorage.setItem(storageKey, String(nextIndex))
-      setSelectedPair(pairs[nextIndex])
-    }
     const frame = window.requestAnimationFrame(() => setIsVisible(true))
     return () => window.cancelAnimationFrame(frame)
-  }, [pairs.length])
-
-  useEffect(() => {
-    if (pairs.length < 2) return
-    const interval = window.setInterval(() => {
-      setSelectedPair((current) => {
-        const currentIndex = pairs.findIndex((pair) => pair.imageSrc === current.imageSrc && pair.caption === current.caption)
-        return pairs[(currentIndex + 1) % pairs.length]
-      })
-    }, 6000)
-    return () => window.clearInterval(interval)
-  }, [pairs])
+  }, [])
 
   return (
     <div className="relative flex h-[100dvh] min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-background text-center">
@@ -298,7 +279,7 @@ function Content({ route, content, onImageError }: { route: Route; content: Site
   }
 }
 
-export function Layout({ content }: { content: SiteContent }) {
+export function Layout({ content, landingImage }: { content: SiteContent; landingImage?: { imageSrc: string; caption: string } }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
   const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
@@ -350,7 +331,7 @@ export function Layout({ content }: { content: SiteContent }) {
   }
 
   if (!hasEnteredSite) {
-    return <LandingScreen home={content.home} onEnter={() => setHasEnteredSite(true)} />
+    return <LandingScreen home={content.home} landingImage={landingImage} onEnter={() => setHasEnteredSite(true)} />
   }
 
   return (
