@@ -106,13 +106,18 @@ export function SidebarMenu({
   const [aboutExpanded, setAboutExpanded] = useState(
     route.view === 'cv' || route.view === 'contacts',
   )
+  const [exhibitionsExpanded, setExhibitionsExpanded] = useState(route.view === 'exhibitions')
+  const [paintingsExpanded, setPaintingsExpanded] = useState(route.view === 'paintings')
+
   // When the route changes elsewhere, ensure the relevant branch is open,
   // without collapsing any other submenu the user has already expanded.
   useEffect(() => {
     if (route.view === 'exhibitions') {
       setWorksExpanded(true)
+      setExhibitionsExpanded(true)
     } else if (route.view === 'paintings') {
       setWorksExpanded(true)
+      setPaintingsExpanded(true)
     } else if (route.view === 'texts') {
       setWorksExpanded(true)
     } else if (route.view === 'cv' || route.view === 'contacts') {
@@ -147,18 +152,57 @@ export function SidebarMenu({
         <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
           <MenuItem label="Works" onClick={() => setWorksExpanded((v) => !v)} />
           <Collapse open={worksExpanded} innerClassName="flex flex-col gap-2 pt-2">
-            <MenuItem
-              label="Exhibitions"
-              indent={1}
-              active={route.view === 'exhibitions'}
-              onClick={() => onNavigate({ view: 'exhibitions', kind: 'solo' })}
-            />
-            <MenuItem
-              label="Paintings"
-              indent={1}
-              active={route.view === 'paintings'}
-              onClick={() => onNavigate({ view: 'paintings', year: paintingYears[0] ?? '2024' })}
-            />
+            {/* Exhibitions → Solo / Group */}
+            <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
+              <MenuItem
+                label="Exhibitions"
+                indent={1}
+                onClick={() => setExhibitionsExpanded((v) => !v)}
+              />
+              <Collapse
+                open={exhibitionsExpanded}
+                innerClassName="flex flex-col gap-1.5 pt-1.5"
+              >
+                <MenuItem
+                  label="Solo"
+                  indent={2}
+                  small
+                  active={route.view === 'exhibitions' && route.kind === 'solo'}
+                  onClick={() => onNavigate({ view: 'exhibitions', kind: 'solo' })}
+                />
+                <MenuItem
+                  label="Group"
+                  indent={2}
+                  small
+                  active={route.view === 'exhibitions' && route.kind === 'group'}
+                  onClick={() => onNavigate({ view: 'exhibitions', kind: 'group' })}
+                />
+              </Collapse>
+            </motion.div>
+
+            {/* Paintings → years */}
+            <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
+              <MenuItem
+                label="Paintings"
+                indent={1}
+                onClick={() => setPaintingsExpanded((v) => !v)}
+              />
+              <Collapse
+                open={paintingsExpanded}
+                innerClassName="flex flex-col gap-1.5 pt-1.5"
+              >
+                {paintingYears.map((year) => (
+                  <MenuItem
+                    key={year}
+                    label={year}
+                    indent={2}
+                    small
+                    active={route.view === 'paintings' && route.year === year}
+                    onClick={() => onNavigate({ view: 'paintings', year })}
+                  />
+                ))}
+              </Collapse>
+            </motion.div>
             {hasTexts && (
               <MenuItem
                 label="Texts"

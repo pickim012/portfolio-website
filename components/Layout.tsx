@@ -105,21 +105,14 @@ function Exhibitions({
   kind,
   items,
   onImageError,
-  onNavigate,
 }: {
   kind: ExhibitionKind
   items: SiteContent['exhibitions']
   onImageError?: (message: string) => void
-  onNavigate: (route: Route) => void
 }) {
   const shown = items.filter((exhibition) => exhibition.kind === kind)
   return (
-    <section className="flex flex-col gap-10 py-4">
-      <div className="flex items-center gap-4 text-sm text-secondary-ink">
-        <span className="text-foreground">Exhibitions</span>
-        <button type="button" onClick={() => onNavigate({ view: 'exhibitions', kind: 'solo' })} className={kind === 'solo' ? 'text-foreground underline underline-offset-4' : 'hover:text-hover-ink'}>Solo</button>
-        <button type="button" onClick={() => onNavigate({ view: 'exhibitions', kind: 'group' })} className={kind === 'group' ? 'text-foreground underline underline-offset-4' : 'hover:text-hover-ink'}>Group</button>
-      </div>
+    <section className="flex flex-col gap-40 py-4">
       {shown.length === 0 ? (
         <p className="text-center text-base text-secondary-ink">
           No {kind} exhibitions yet.
@@ -157,23 +150,13 @@ function Texts({ links }: { links: SiteContent['textsLinks'] }) {
 function Paintings({
   year,
   paintingsByYear,
-  paintingYears,
-  onNavigate,
 }: {
   year: string
   paintingsByYear: SiteContent['paintingsByYear']
-  paintingYears: string[]
-  onNavigate: (route: Route) => void
 }) {
   const works = paintingsByYear[year] ?? []
   return (
-    <section className="flex flex-col gap-10 py-4">
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-secondary-ink">
-        <span className="text-foreground">Paintings</span>
-        {paintingYears.map((availableYear) => (
-          <button key={availableYear} type="button" onClick={() => onNavigate({ view: 'paintings', year: availableYear })} className={availableYear === year ? 'text-foreground underline underline-offset-4' : 'hover:text-hover-ink'}>{availableYear}</button>
-        ))}
-      </div>
+    <section className="flex flex-col gap-24 py-4">
       {works.length === 0 ? (
         <p className="text-center text-base text-secondary-ink">
           No works for {year}.
@@ -288,14 +271,14 @@ class GroupDebugBoundary extends Component<
   }
 }
 
-function Content({ route, content, onImageError, onNavigate }: { route: Route; content: SiteContent; onImageError?: (message: string) => void; onNavigate: (route: Route) => void }) {
+function Content({ route, content, onImageError }: { route: Route; content: SiteContent; onImageError?: (message: string) => void }) {
   switch (route.view) {
     case 'home':
       return null
     case 'exhibitions':
-      return <Exhibitions kind={route.kind} items={content.exhibitions} onImageError={onImageError} onNavigate={onNavigate} />
+      return <Exhibitions kind={route.kind} items={content.exhibitions} onImageError={onImageError} />
     case 'paintings':
-      return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} paintingYears={content.paintingYears} onNavigate={onNavigate} />
+      return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} />
     case 'texts':
       return <Texts links={content.textsLinks} />
     case 'cv':
