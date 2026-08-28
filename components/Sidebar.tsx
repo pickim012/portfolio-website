@@ -100,9 +100,6 @@ export function SidebarMenu({
 
   // Independent toggle state: each submenu opens/closes on its own,
   // and opening one never collapses the others.
-  const [worksExpanded, setWorksExpanded] = useState(
-    route.view === 'exhibitions' || route.view === 'paintings' || route.view === 'texts',
-  )
   const [aboutExpanded, setAboutExpanded] = useState(
     route.view === 'cv' || route.view === 'contacts',
   )
@@ -112,13 +109,7 @@ export function SidebarMenu({
   // When the route changes elsewhere, ensure the relevant branch is open,
   // without collapsing any other submenu the user has already expanded.
   useEffect(() => {
-    if (route.view === 'exhibitions') {
-      setWorksExpanded(true)
-    } else if (route.view === 'paintings') {
-      setWorksExpanded(true)
-    } else if (route.view === 'texts') {
-      setWorksExpanded(true)
-    } else if (route.view === 'cv' || route.view === 'contacts') {
+    if (route.view === 'cv' || route.view === 'contacts') {
       setAboutExpanded(true)
     }
   }, [route])
@@ -148,8 +139,8 @@ export function SidebarMenu({
         )}
         {/* Works */}
         <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
-          <MenuItem label="Works" onClick={() => setWorksExpanded((v) => !v)} />
-          <Collapse open={worksExpanded} innerClassName="flex flex-col gap-2 pt-2">
+          <MenuItem label="Works" />
+          <div className="flex flex-col gap-2 pt-2">
             {/* Exhibitions → Solo / Group */}
             <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
               <MenuItem
@@ -209,7 +200,7 @@ export function SidebarMenu({
                 onClick={() => onNavigate({ view: 'texts' })}
               />
             )}
-          </Collapse>
+          </div>
         </motion.div>
 
         {/* About */}
