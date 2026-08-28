@@ -29,25 +29,22 @@ function MenuItem({
   indent = 0,
   small = false,
   onClick,
-  interactive = true,
 }: {
   label: string
   active?: boolean
   indent?: number
   small?: boolean
-  onClick?: () => void
-  interactive?: boolean
+  onClick: () => void
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      disabled={!interactive}
       aria-current={active ? 'page' : undefined}
       style={{ paddingLeft: `${indent * 16}px` }}
-      className={`block w-full text-left leading-[1.15] ${
+      className={`block w-full text-left leading-[1.15] transition-colors duration-200 ${
         small ? 'text-sm' : 'text-base leading-[1.25]'
-      } ${active || !interactive ? 'text-foreground' : 'text-secondary-ink transition-colors duration-200 hover:text-hover-ink'}`}
+      } ${active ? 'text-foreground' : 'text-secondary-ink hover:text-hover-ink'}`}
     >
       {label}
     </button>
@@ -142,7 +139,7 @@ export function SidebarMenu({
         )}
         {/* Works */}
         <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
-          <MenuItem label="Works" interactive={false} />
+          <MenuItem label="Works" />
           <div className="flex flex-col gap-2 pt-2">
             {/* Exhibitions → Solo / Group */}
             <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
