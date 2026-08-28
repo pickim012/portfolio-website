@@ -244,12 +244,15 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
 
 class GroupDebugBoundary extends Component<
   { children: React.ReactNode; onError: (message: string) => void },
-  { error: string | null }
+  { error: string | null; stack: string | null }
 > {
-  state = { error: null }
+  state = { error: null, stack: null }
 
   static getDerivedStateFromError(error: unknown) {
-    return { error: error instanceof Error ? error.message : String(error) }
+    return {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack ?? null : null,
+    }
   }
 
   componentDidCatch(error: unknown) {
@@ -258,7 +261,13 @@ class GroupDebugBoundary extends Component<
 
   render() {
     if (!this.state.error) return this.props.children
-    return <div className="rounded border border-red-500 bg-red-50 p-4 font-mono text-sm text-red-900">Group debug error: {this.state.error}</div>
+    return (
+      <div role="alert" className="rounded border-2 border-red-600 bg-red-50 p-4 text-left text-red-950">
+        <p className="font-bold">Group debug error</p>
+        <p className="mt-2 font-mono text-sm">{this.state.error}</p>
+        {this.state.stack && <pre className="mt-3 max-h-[60vh] overflow-auto whitespace-pre-wrap font-mono text-xs leading-relaxed">{this.state.stack}</pre>}
+      </div>
+    )
   }
 }
 
@@ -288,6 +297,22 @@ export function Layout({ content, landingImage }: { content: SiteContent; landin
   const homeLeaveTimer = useRef<number | null>(null)
 
   useEffect(() => {
+    if (route.view !== 'exhibitions' || route.kind !== 'group') return
+    const report = (value: unknown) => {
+      const message = value instanceof Error ? value.stack || value.message : String(value)
+      setGroupDebugError(message)
+    }
+    const handleError = (event: ErrorEvent) => report(event.error || event.message)
+    const handleRejection = (event: PromiseRejectionEvent) => report(event.reason)
+    window.addEventListener('error', handleError)
+    window.addEventListener('unhandledrejection', handleRejection)
+    return () => {
+      window.removeEventListener('error', handleError)
+      window.removeEventListener('unhandledrejection', handleRejection)
+    }
+  }, [route])
+
+  useEffect(() => {
     const updateBackToTop = () => setShowBackToTop(window.scrollY > 320)
     updateBackToTop()
     window.addEventListener('scroll', updateBackToTop, { passive: true })
@@ -313,7 +338,8 @@ export function Layout({ content, landingImage }: { content: SiteContent; landin
   }, [])
 
   const handleNavigate = (next: Route) => {
-    if (routeKey(next) === routeKey(route) || homeLeaving) return
+    try {
+      if (routeKey(next) === routeKey(route) || homeLeaving) return
 
     // Home uses a wider grid than interior pages. Fade it out before changing
     // the grid, so the outgoing image never visibly reflows into a smaller size.
@@ -326,8 +352,13 @@ export function Layout({ content, landingImage }: { content: SiteContent; landin
       return
     }
 
-    // Keep other outgoing pages at their current position; scroll resets after exit.
-    setRoute(next)
+      // Keep other outgoing pages at their current position; scroll resets after exit.
+      setRoute(next)
+    } catch (error) {
+      if (route.view === 'exhibitions' && route.kind === 'group') {
+        setGroupDebugError(error instanceof Error ? error.stack || error.message : String(error))
+      }
+    }
   }
 
   if (!hasEnteredSite) {
