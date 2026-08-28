@@ -30,6 +30,7 @@ function MenuItem({
   small = false,
   onClick,
   interactive = true,
+  muted = false,
 }: {
   label: string
   active?: boolean
@@ -37,6 +38,7 @@ function MenuItem({
   small?: boolean
   onClick?: () => void
   interactive?: boolean
+  muted?: boolean
 }) {
   return (
     <button
@@ -47,7 +49,7 @@ function MenuItem({
       style={{ paddingLeft: `${indent * 16}px` }}
       className={`block w-full text-left leading-[1.15] ${
         small ? 'text-sm' : 'text-base leading-[1.25]'
-      } ${active || !interactive ? 'text-foreground' : 'text-secondary-ink transition-colors duration-200 hover:text-hover-ink'}`}
+      } ${active ? 'text-foreground' : muted || !interactive ? 'text-secondary-ink' : 'text-secondary-ink transition-colors duration-200 hover:text-hover-ink'}`}
     >
       {label}
     </button>
@@ -142,7 +144,7 @@ export function SidebarMenu({
         )}
         {/* Works */}
         <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
-          <MenuItem label="Works" interactive={false} />
+          <MenuItem label="Works" interactive={false} muted />
           <div className="flex flex-col gap-2 pt-2">
             {/* Exhibitions → Solo / Group */}
             <motion.div layout="position" transition={layoutTransition} className="flex flex-col">
