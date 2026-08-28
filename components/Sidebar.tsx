@@ -106,18 +106,16 @@ export function SidebarMenu({
   const [aboutExpanded, setAboutExpanded] = useState(
     route.view === 'cv' || route.view === 'contacts',
   )
-  const [exhibitionsExpanded, setExhibitionsExpanded] = useState(route.view === 'exhibitions')
-  const [paintingsExpanded, setPaintingsExpanded] = useState(route.view === 'paintings')
+  const [exhibitionsExpanded, setExhibitionsExpanded] = useState(false)
+  const [paintingsExpanded, setPaintingsExpanded] = useState(false)
 
   // When the route changes elsewhere, ensure the relevant branch is open,
   // without collapsing any other submenu the user has already expanded.
   useEffect(() => {
     if (route.view === 'exhibitions') {
       setWorksExpanded(true)
-      setExhibitionsExpanded(true)
     } else if (route.view === 'paintings') {
       setWorksExpanded(true)
-      setPaintingsExpanded(true)
     } else if (route.view === 'texts') {
       setWorksExpanded(true)
     } else if (route.view === 'cv' || route.view === 'contacts') {
