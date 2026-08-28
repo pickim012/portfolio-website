@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { Component, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
 import { SidebarMenu, MobileMenu } from './Sidebar'
@@ -123,9 +123,11 @@ src={home.imageSrc || '/placeholder.svg'}
 function Exhibitions({
   kind,
   items,
+  onImageError,
 }: {
   kind: ExhibitionKind
   items: SiteContent['exhibitions']
+  onImageError?: (message: string) => void
 }) {
   const shown = items.filter((exhibition) => exhibition.kind === kind)
   return (
@@ -136,7 +138,7 @@ function Exhibitions({
         </p>
       ) : (
         shown.map((exhibition) => (
-          <Exhibition key={exhibition.id} exhibition={exhibition} />
+          <Exhibition key={exhibition.id} exhibition={exhibition} onImageError={onImageError} />
         ))
       )}
     </section>
@@ -259,12 +261,32 @@ function Contacts({ contacts }: { contacts: SiteContent['contacts'] }) {
   )
 }
 
-function Content({ route, content }: { route: Route; content: SiteContent }) {
+class GroupDebugBoundary extends Component<
+  { children: React.ReactNode; onError: (message: string) => void },
+  { error: string | null }
+> {
+  state = { error: null }
+
+  static getDerivedStateFromError(error: unknown) {
+    return { error: error instanceof Error ? error.message : String(error) }
+  }
+
+  componentDidCatch(error: unknown) {
+    this.props.onError(error instanceof Error ? error.stack || error.message : String(error))
+  }
+
+  render() {
+    if (!this.state.error) return this.props.children
+    return <div className="rounded border border-red-500 bg-red-50 p-4 font-mono text-sm text-red-900">Group debug error: {this.state.error}</div>
+  }
+}
+
+function Content({ route, content, onImageError }: { route: Route; content: SiteContent; onImageError?: (message: string) => void }) {
   switch (route.view) {
     case 'home':
       return null
     case 'exhibitions':
-      return <Exhibitions kind={route.kind} items={content.exhibitions} />
+      return <Exhibitions kind={route.kind} items={content.exhibitions} onImageError={onImageError} />
     case 'paintings':
       return <Paintings year={route.year} paintingsByYear={content.paintingsByYear} />
     case 'texts':
@@ -281,6 +303,7 @@ export function Layout({ content }: { content: SiteContent }) {
   const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [groupDebugError, setGroupDebugError] = useState<string | null>(null)
   const homeLeaveTimer = useRef<number | null>(null)
 
   useEffect(() => {
@@ -381,6 +404,11 @@ export function Layout({ content }: { content: SiteContent }) {
 
         {/* Column 2 — Content */}
         <main className="w-full">
+          {route.view === 'exhibitions' && route.kind === 'group' && groupDebugError && (
+            <div role="alert" className="mb-4 rounded border border-red-500 bg-red-50 p-4 font-mono text-xs leading-relaxed text-red-900">
+              Group debug error: {groupDebugError}
+            </div>
+          )}
           <AnimatePresence
             mode="wait"
             onExitComplete={() => {
@@ -395,7 +423,13 @@ export function Layout({ content }: { content: SiteContent }) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Content route={route} content={content} />
+              {route.view === 'exhibitions' && route.kind === 'group' ? (
+                <GroupDebugBoundary onError={setGroupDebugError}>
+                  <Content route={route} content={content} onImageError={setGroupDebugError} />
+                </GroupDebugBoundary>
+              ) : (
+                <Content route={route} content={content} />
+              )}
             </motion.div>
           </AnimatePresence>
         </main>
