@@ -106,18 +106,13 @@ export function SidebarMenu({
   const [aboutExpanded, setAboutExpanded] = useState(
     route.view === 'cv' || route.view === 'contacts',
   )
-  const [exhibitionsExpanded, setExhibitionsExpanded] = useState(route.view === 'exhibitions')
-  const [paintingsExpanded, setPaintingsExpanded] = useState(route.view === 'paintings')
-
   // When the route changes elsewhere, ensure the relevant branch is open,
   // without collapsing any other submenu the user has already expanded.
   useEffect(() => {
     if (route.view === 'exhibitions') {
       setWorksExpanded(true)
-      setExhibitionsExpanded(true)
     } else if (route.view === 'paintings') {
       setWorksExpanded(true)
-      setPaintingsExpanded(true)
     } else if (route.view === 'texts') {
       setWorksExpanded(true)
     } else if (route.view === 'cv' || route.view === 'contacts') {
@@ -157,12 +152,9 @@ export function SidebarMenu({
               <MenuItem
                 label="Exhibitions"
                 indent={1}
-                onClick={() => setExhibitionsExpanded((v) => !v)}
+                onClick={() => onNavigate({ view: 'exhibitions', kind: route.kind ?? 'solo' })}
               />
-              <Collapse
-                open={exhibitionsExpanded}
-                innerClassName="flex flex-col gap-1.5 pt-1.5"
-              >
+              <div className="flex flex-col gap-1.5 pt-1.5">
                 <MenuItem
                   label="Solo"
                   indent={2}
@@ -177,7 +169,7 @@ export function SidebarMenu({
                   active={route.view === 'exhibitions' && route.kind === 'group'}
                   onClick={() => onNavigate({ view: 'exhibitions', kind: 'group' })}
                 />
-              </Collapse>
+              </div>
             </motion.div>
 
             {/* Paintings → years */}
@@ -185,12 +177,9 @@ export function SidebarMenu({
               <MenuItem
                 label="Paintings"
                 indent={1}
-                onClick={() => setPaintingsExpanded((v) => !v)}
+                onClick={() => onNavigate({ view: 'paintings', year: route.year ?? paintingYears[0] ?? '' })}
               />
-              <Collapse
-                open={paintingsExpanded}
-                innerClassName="flex flex-col gap-1.5 pt-1.5"
-              >
+              <div className="flex flex-col gap-1.5 pt-1.5">
                 {paintingYears.map((year) => (
                   <MenuItem
                     key={year}
@@ -201,7 +190,7 @@ export function SidebarMenu({
                     onClick={() => onNavigate({ view: 'paintings', year })}
                   />
                 ))}
-              </Collapse>
+              </div>
             </motion.div>
             {hasTexts && (
               <MenuItem
