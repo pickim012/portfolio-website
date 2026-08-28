@@ -1,6 +1,6 @@
 "use client"
 
-import { useId } from "react"
+import { useId, useRef, useState } from "react"
 import {
   DndContext,
   PointerSensor,
@@ -105,6 +105,9 @@ export function ImageUrlList({
   onItemsChange: (next: ImageItem[]) => void
 }) {
   const dndId = useId()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   )
@@ -124,6 +127,23 @@ export function ImageUrlList({
 
   function remove(key: string) {
     onItemsChange(items.filter((i) => i.key !== key))
+  }
+
+  async function upload(file: File) {
+    setUploading(true)
+    setUploadError(null)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const response = await fetch('/api/admin/upload', { method: 'POST', body: formData })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Upload failed')
+      onItemsChange([...items, { key: `img-${Date.now()}`, url: result.url }])
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : 'Upload failed')
+    } finally {
+      setUploading(false)
+    }
   }
 
   function add() {
@@ -161,11 +181,16 @@ export function ImageUrlList({
         </p>
       )}
 
-      <div>
+      <div className="flex flex-wrap items-center gap-2">
         <Btn type="button" variant="secondary" onClick={add}>
           + Add another image
         </Btn>
+        <Btn type="button" variant="secondary" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+          {uploading ? 'Uploading…' : 'Upload image'}
+        </Btn>
+        <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = '' }} />
       </div>
+      {uploadError && <p role="alert" className="text-sm text-red-600">{uploadError}</p>}
     </div>
   )
 }
