@@ -144,7 +144,7 @@ export function SidebarMenu({
           flex column, so there is never a reserved parent gap left to snap
           when it unmounts. Vertical spacing between sibling *blocks* uses gap
           on their static wrappers, which stay mounted and never snap. */}
-      <Collapse open={!isHome || homeMenuExpanded} innerClassName="flex flex-col gap-4 text-base">
+      <Collapse open={!isHome || homeMenuExpanded} innerClassName="flex flex-col gap-6 text-base">
         {showHomeItem && (
           <MenuItem label="Home" active={false} onClick={() => window.dispatchEvent(new CustomEvent('site:return-landing'))} />
         )}
