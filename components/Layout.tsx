@@ -362,7 +362,19 @@ export function Layout({ content, landingImage }: { content: SiteContent; landin
   }
 
   if (!hasEnteredSite) {
-    return <LandingScreen home={content.home} landingImage={landingImage} onEnter={() => setHasEnteredSite(true)} />
+    return (
+      <LandingScreen
+        home={content.home}
+        landingImage={landingImage}
+        onEnter={() => {
+          const topmostYear = content.paintingYears[0]
+          if (topmostYear) {
+            setRoute({ view: 'paintings', year: topmostYear })
+          }
+          setHasEnteredSite(true)
+        }}
+      />
+    )
   }
 
   return (
