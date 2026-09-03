@@ -60,7 +60,7 @@ function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['hom
         </span>
       </button>
       {selectedPair.caption.trim() && (
-        <span className="absolute bottom-6 right-6 z-10 max-w-[min(28rem,calc(100%-3rem))] text-right text-xs leading-[1.45] tracking-wide text-white md:text-sm">
+        <span className="absolute bottom-6 right-6 z-10 max-w-[min(28rem,calc(100%-3rem))] text-right text-[10pt] leading-[1.45] tracking-wide text-white md:text-sm">
           {selectedPair.caption}
         </span>
       )}
