@@ -265,7 +265,7 @@ export function MobileMenu({ route, onNavigate, paintingYears, hasTexts = false,
           >
             {ARTIST_NAME.first}
           </button>
-          <span className="flex items-center gap-2">
+          <span className="flex items-baseline gap-2">
             <button
               type="button"
               onClick={() => handleNavigate({ view: 'home' })}
@@ -277,9 +277,9 @@ export function MobileMenu({ route, onNavigate, paintingYears, hasTexts = false,
               type="button"
               aria-label="Open menu"
               onClick={() => setMobileOpen(true)}
-              className="text-secondary-ink"
+              className="text-secondary-ink leading-none"
             >
-              <Menu className="h-4 w-4" strokeWidth={1} />
+              <Menu className="relative top-px h-4 w-4" strokeWidth={1} />
             </button>
           </span>
         </div>
