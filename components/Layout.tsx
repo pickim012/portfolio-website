@@ -23,15 +23,7 @@ function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['hom
 
   return (
     <div className="relative flex h-[100dvh] min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-background text-center">
-      <AnimatePresence initial={false} mode="sync">
-        <motion.div
-          key={`${selectedPair.imageSrc}-${selectedPair.caption}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
-          className="absolute inset-0"
-        >
+      <div className="absolute inset-0">
         <Image
         src={selectedPair.imageSrc || '/placeholder.svg'}
         alt=""
@@ -64,8 +56,7 @@ function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['hom
           {selectedPair.caption}
         </span>
       )}
-        </motion.div>
-      </AnimatePresence>
+      </div>
     </div>
   )
 }
