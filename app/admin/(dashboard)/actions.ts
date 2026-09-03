@@ -1,5 +1,6 @@
 'use server'
 
+import { del } from '@vercel/blob'
 import { and, asc, eq, sql } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
@@ -26,18 +27,49 @@ function revalidateAll() {
   revalidatePath('/admin', 'layout')
 }
 
+function isBlobUrl(value: string) {
+  return value.startsWith('https://') && value.includes('.public.blob.vercel-storage.com/')
+}
+
+async function deleteUnusedBlobUrls(candidates: string[]) {
+  const urls = [...new Set(candidates.filter(isBlobUrl))]
+  if (!urls.length) return
+
+  const [homeRows, exhibitionRows, paintingRows] = await Promise.all([
+    db.select({ imageUrl: homeContent.imageUrl }).from(homeContent),
+    db.select({ images: exhibitions.images }).from(exhibitions),
+    db.select({ images: paintings.images }).from(paintings),
+  ])
+  const usedContent = JSON.stringify({ homeRows, exhibitionRows, paintingRows })
+  const unused = urls.filter((url) => !usedContent.includes(url))
+  if (!unused.length) return
+  try {
+    await del(unused)
+  } catch (error) {
+    console.error('[admin blob cleanup]', error)
+  }
+}
+
+function blobUrls(value: unknown): string[] {
+  const text = typeof value === 'string' ? value : JSON.stringify(value ?? '')
+  return text.match(/https:\/\/[^\"'\s]+\.public\.blob\.vercel-storage\.com\/[^\"'\s]+/g) ?? []
+}
+
 // ---------------------------------------------------------------------------
 // Home
 // ---------------------------------------------------------------------------
 export async function saveHome(input: { imageUrl: string; body?: string; imagePairs?: { imageSrc: string; caption: string }[] }) {
   await assertAdmin()
+  const [previous] = await db.select({ imageUrl: homeContent.imageUrl }).from(homeContent).where(eq(homeContent.id, 1))
+  const nextImageUrl = input.imagePairs ? JSON.stringify(input.imagePairs) : input.imageUrl
   await db
     .insert(homeContent)
-    .values({ id: 1, imageUrl: input.imagePairs ? JSON.stringify(input.imagePairs) : input.imageUrl, body: input.body ?? '', updatedAt: new Date() })
+    .values({ id: 1, imageUrl: nextImageUrl, body: input.body ?? '', updatedAt: new Date() })
     .onConflictDoUpdate({
       target: homeContent.id,
-      set: { imageUrl: input.imagePairs ? JSON.stringify(input.imagePairs) : input.imageUrl, ...(input.body === undefined ? {} : { body: input.body }), updatedAt: new Date() },
+      set: { imageUrl: nextImageUrl, ...(input.body === undefined ? {} : { body: input.body }), updatedAt: new Date() },
     })
+  await deleteUnusedBlobUrls(blobUrls(previous?.imageUrl))
   revalidateAll()
 }
 
@@ -68,6 +100,7 @@ export async function createExhibition(input: ExhibitionInput) {
 
 export async function updateExhibition(id: number, input: ExhibitionInput) {
   await assertAdmin()
+  const [previous] = await db.select({ images: exhibitions.images }).from(exhibitions).where(eq(exhibitions.id, id))
   // Note: sortOrder is intentionally NOT changed — editing keeps its position.
   await db
     .update(exhibitions)
@@ -83,6 +116,7 @@ export async function updateExhibition(id: number, input: ExhibitionInput) {
       published: input.published,
     })
     .where(eq(exhibitions.id, id))
+  await deleteUnusedBlobUrls(blobUrls(previous?.images))
   revalidateAll()
 }
 
@@ -94,7 +128,9 @@ export async function setExhibitionPublished(id: number, published: boolean) {
 
 export async function deleteExhibition(id: number) {
   await assertAdmin()
+  const [previous] = await db.select({ images: exhibitions.images }).from(exhibitions).where(eq(exhibitions.id, id))
   await db.delete(exhibitions).where(eq(exhibitions.id, id))
+  await deleteUnusedBlobUrls(blobUrls(previous?.images))
   revalidateAll()
 }
 
@@ -134,6 +170,7 @@ export async function createPainting(input: PaintingInput) {
 
 export async function updatePainting(id: number, input: PaintingInput) {
   await assertAdmin()
+  const [previous] = await db.select({ images: paintings.images }).from(paintings).where(eq(paintings.id, id))
   await db
     .update(paintings)
     .set({
@@ -144,12 +181,15 @@ export async function updatePainting(id: number, input: PaintingInput) {
       images: input.images,
     })
     .where(eq(paintings.id, id))
+  await deleteUnusedBlobUrls(blobUrls(previous?.images))
   revalidateAll()
 }
 
 export async function deletePainting(id: number) {
   await assertAdmin()
+  const [previous] = await db.select({ images: paintings.images }).from(paintings).where(eq(paintings.id, id))
   await db.delete(paintings).where(eq(paintings.id, id))
+  await deleteUnusedBlobUrls(blobUrls(previous?.images))
   revalidateAll()
 }
 
