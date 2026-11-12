@@ -128,7 +128,7 @@ function Texts({ links }: { links: SiteContent['textsLinks'] }) {
             href={link.url}
             target={link.url.startsWith('http') ? '_blank' : undefined}
             rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className="underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+            className="underline decoration-[0.5px] underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
           >
             {link.title}
           </a>
@@ -194,7 +194,7 @@ function CV({
                 href={link.url}
                 target={link.url.startsWith('http') ? '_blank' : undefined}
                 rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+                className="underline decoration-[0.5px] underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
               >
                 {link.title}
               </a>
