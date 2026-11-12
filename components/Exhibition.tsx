@@ -37,14 +37,13 @@ export function Exhibition({ exhibition, onImageError }: { exhibition: PublicExh
 
       {exhibition.links.length > 0 && (
         <div className="mt-8 w-full pl-2 text-left text-base leading-[1.45] text-secondary-ink">
-          <span>Links: </span>
           {exhibition.links.map((link, index) => (
             <span key={link.id}>
               <a
                 href={link.url}
                 target={link.url.startsWith('http') ? '_blank' : undefined}
                 rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="italic transition-colors duration-200 hover:text-hover-ink"
+                className="underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
               >
                 {link.title}
               </a>
