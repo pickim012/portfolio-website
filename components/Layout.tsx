@@ -182,7 +182,7 @@ function CV({
       {cvLinks.length > 0 && (
         <div className="flex flex-col gap-1">
           <h2 className="text-base leading-[1.2] text-secondary-ink">Links</h2>
-          <div className="flex flex-col gap-1 pl-2 text-base leading-[1.45] text-foreground/75">
+<div className="flex flex-col gap-0.5 pl-2 text-[15px] leading-[1.35] text-foreground/75">
             {cvLinks.map((link) => (
               <a
                 key={link.id}
