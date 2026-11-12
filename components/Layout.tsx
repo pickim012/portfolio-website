@@ -11,10 +11,10 @@ import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
-function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['home']; landingImage?: { imageSrc: string; caption: string }; onEnter: () => void }) {
+function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['home']; landingImage?: { imageSrc: string }; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const selectedPair = landingImage ?? { imageSrc: home.imageSrc, caption: '' }
+  const selectedPair = landingImage ?? { imageSrc: home.imageSrc }
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => setIsVisible(true))
@@ -51,11 +51,6 @@ function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['hom
           {ARTIST_NAME.first} {ARTIST_NAME.last}
         </span>
       </button>
-      {selectedPair.caption.trim() && (
-        <span className="absolute bottom-6 right-6 z-10 max-w-[min(28rem,calc(100%-3rem))] text-right text-[10pt] leading-[1.45] tracking-wide text-white md:text-sm">
-          {selectedPair.caption}
-        </span>
-      )}
       </div>
     </div>
   )
@@ -279,7 +274,7 @@ function Content({ route, content, onImageError }: { route: Route; content: Site
   }
 }
 
-export function Layout({ content, landingImage }: { content: SiteContent; landingImage?: { imageSrc: string; caption: string } }) {
+export function Layout({ content, landingImage }: { content: SiteContent; landingImage?: { imageSrc: string } }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
   const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
