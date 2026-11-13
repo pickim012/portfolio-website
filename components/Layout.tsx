@@ -11,10 +11,10 @@ import { Painting } from './Painting'
 import type { SiteContent } from '@/lib/content'
 import { routeKey, type ExhibitionKind, type Route } from '@/lib/navigation'
 
-function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['home']; landingImage?: { imageSrc: string; caption: string }; onEnter: () => void }) {
+function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['home']; landingImage?: { imageSrc: string }; onEnter: () => void }) {
   const [isZoneHovered, setIsZoneHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const selectedPair = landingImage ?? { imageSrc: home.imageSrc, caption: '' }
+  const selectedPair = landingImage ?? { imageSrc: home.imageSrc }
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => setIsVisible(true))
@@ -23,15 +23,7 @@ function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['hom
 
   return (
     <div className="relative flex h-[100dvh] min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-background text-center">
-      <AnimatePresence initial={false} mode="sync">
-        <motion.div
-          key={`${selectedPair.imageSrc}-${selectedPair.caption}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
-          className="absolute inset-0"
-        >
+      <div className="absolute inset-0">
         <Image
         src={selectedPair.imageSrc || '/placeholder.svg'}
         alt=""
@@ -59,13 +51,7 @@ function LandingScreen({ home, landingImage, onEnter }: { home: SiteContent['hom
           {ARTIST_NAME.first} {ARTIST_NAME.last}
         </span>
       </button>
-      {selectedPair.caption.trim() && (
-        <span className="absolute bottom-6 right-6 z-10 max-w-[min(28rem,calc(100%-3rem))] text-right text-[10pt] leading-[1.45] tracking-wide text-white md:text-sm">
-          {selectedPair.caption}
-        </span>
-      )}
-        </motion.div>
-      </AnimatePresence>
+      </div>
     </div>
   )
 }
@@ -137,7 +123,7 @@ function Texts({ links }: { links: SiteContent['textsLinks'] }) {
             href={link.url}
             target={link.url.startsWith('http') ? '_blank' : undefined}
             rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className="underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+            className="underline decoration-[0.5px] underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
           >
             {link.title}
           </a>
@@ -196,14 +182,14 @@ function CV({
       {cvLinks.length > 0 && (
         <div className="flex flex-col gap-1">
           <h2 className="text-base leading-[1.2] text-secondary-ink">Links</h2>
-          <div className="flex flex-col gap-1 pl-2 text-base leading-[1.45] text-foreground/75">
+<div className="flex flex-col gap-0.5 pl-2 text-[15px] leading-[1.35] text-foreground/75">
             {cvLinks.map((link) => (
               <a
                 key={link.id}
                 href={link.url}
                 target={link.url.startsWith('http') ? '_blank' : undefined}
                 rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="underline underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
+                className="underline decoration-[0.5px] underline-offset-4 transition-colors duration-200 hover:text-hover-ink"
               >
                 {link.title}
               </a>
@@ -288,7 +274,7 @@ function Content({ route, content, onImageError }: { route: Route; content: Site
   }
 }
 
-export function Layout({ content, landingImage }: { content: SiteContent; landingImage?: { imageSrc: string; caption: string } }) {
+export function Layout({ content, landingImage }: { content: SiteContent; landingImage?: { imageSrc: string } }) {
   const [route, setRoute] = useState<Route>({ view: 'home' })
   const [hasEnteredSite, setHasEnteredSite] = useState(false)
   const [homeLeaving, setHomeLeaving] = useState(false)
